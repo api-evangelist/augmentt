@@ -1,0 +1,33 @@
+aid: augmentt
+name: Augmentt
+description: >-
+  Augmentt is a SaaS management platform for MSPs providing SaaS discovery, license optimization, and security policy enforcement.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - SaaS Management
+  - MSP
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/augmentt/refs/heads/main/apis.yml
+created: '2026-03-27'
+modified: '2026-03-27'
+specificationVersion: '0.19'
+apis:
+  - aid: augmentt:augmentt
+    name: Augmentt
+    description: >-
+      Augmentt is a SaaS management platform for MSPs providing SaaS discovery, license optimization, and security policy enforcement.
+    humanURL: https://www.augmentt.com
+    tags:
+      - SaaS Management
+    properties:
+      - type: Documentation
+        url: https://www.augmentt.com/resources
+common:
+  - type: Website
+    url: https://www.augmentt.com
+  - type: Documentation
+    url: https://www.augmentt.com/resources
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
