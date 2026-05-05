@@ -1,0 +1,13 @@
+{
+  "repo": "augmentt",
+  "feeds": [
+    {
+      "source": "https://www.augmentt.com/blog/",
+      "feed_url": "https://www.augmentt.com/feed/",
+      "saved": 10,
+      "title": "Augmentt"
+    }
+  ],
+  "post_count": 10,
+  "fetched": "2026-05-03T23:22:52Z"
+}
