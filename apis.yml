@@ -115,6 +115,21 @@ common:
   url: https://www.augmentt.com/free-trial/
 - type: Pricing
   url: https://www.augmentt.com/pricing/
+- type: Integrations
+  url: https://www.augmentt.com/integrations/
+integrations:
+  - name: Tile-Icon-2-1-1 12
+  - name: Tile-Icon-2-1-1 11
+  - name: Tile-Icon-2-1-1 10
+  - name: Tile-Icon-2-1-1 9
+  - name: Tile-Icon-2-1-1 8
+  - name: Tile-Icon-2-1-1 7
+  - name: Tile-Icon-2-1-1 6
+  - name: Tile-Icon-2-1-1 5
+  - name: Tile-Icon-2-1-1 4
+  - name: Tile-Icon-2-1-1 3
+  - name: Tile-Icon-2-1-1 2
+  - name: Tile-Icon-2-1-1 1
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
