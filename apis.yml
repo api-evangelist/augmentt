@@ -121,6 +121,8 @@ common:
     url: https://www.augmentt.com/pricing/
   - type: Integrations
     url: https://www.augmentt.com/integrations/
+  - type: LLMsTxt
+    url: https://augmentt.com/llms.txt
 integrations:
   - name: Tile-Icon-2-1-1 12
   - name: Tile-Icon-2-1-1 11
