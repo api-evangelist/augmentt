@@ -2,12 +2,20 @@
   "repo": "augmentt",
   "feeds": [
     {
-      "source": "https://www.augmentt.com/blog/",
+      "source": "https://www.augmentt.com/blog/feed/",
       "feed_url": "https://www.augmentt.com/blog/feed/",
-      "title": "Blog \u2013 Augmentt",
-      "saved": 5
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://www.augmentt.com/contact/",
+      "feed_url": "https://www.augmentt.com/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
     }
   ],
-  "post_count": 15,
-  "fetched": "2026-05-17T20:20:35Z"
+  "post_count": 18,
+  "fetched": "2026-06-01T23:35:02Z"
 }
