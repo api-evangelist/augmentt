@@ -59,6 +59,10 @@ apis:
     - type: Documentation
       url: https://www.augmentt.com/user-management/
 common:
+  - type: VulnerabilityDisclosure
+    url: security/augmentt-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/augmentt-domain-security.yml
   - type: GitHubOrganization
     url: https://github.com/Augmentt
   - type: LinkedIn
