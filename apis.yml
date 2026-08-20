@@ -18,6 +18,12 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
 tags:
   - MSP
+  - Microsoft-365
+  - SaaS Management
+  - SaaS Security
+  - Shadow IT
+tags_raw:
+  - MSP
   - Microsoft 365
   - SaaS Management
   - SaaS Security
@@ -37,6 +43,11 @@ apis:
     tags:
     - Discovery
     - MSP
+    - Software-as-a-Service
+    - Shadow IT
+    tags_raw:
+    - Discovery
+    - MSP
     - SaaS
     - Shadow IT
     properties:
@@ -49,6 +60,11 @@ apis:
     humanURL: https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/
     baseURL: https://www.augmentt.com
     tags:
+    - License Management
+    - MSP
+    - Software-as-a-Service
+    - Spend Management
+    tags_raw:
     - License Management
     - MSP
     - SaaS
