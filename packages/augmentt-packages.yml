@@ -1,0 +1,64 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, github.com/Augmentt and https://support.augmentt.com/kb/en/augmentt-api-548051
+provider: Augmentt
+providerId: augmentt
+result: none
+package_count: 0
+official_sdk_count: 0
+summary: >-
+  Augmentt publishes no client libraries. The API reference documents raw curl with two headers and
+  nothing else - no SDK, no CLI, no Postman collection, no code samples in any language beyond the
+  single curl example. Registry searches on 2026-09-14 returned no first-party package on npm or
+  PyPI, and no other registry (Maven Central, NuGet, pkg.go.dev, RubyGems, Packagist, crates.io) is
+  referenced anywhere in Augmentt's documentation. No SDKs pointer is emitted for this record,
+  because there are no SDKs.
+packages: []
+searched:
+  - registry: npm
+    endpoint: https://registry.npmjs.org/-/v1/search?text=augmentt
+    query: augmentt
+    result: no packages returned
+    version: null
+    published: null
+    checked: '2026-09-14'
+  - registry: pypi
+    endpoint: https://pypi.org/pypi/augmentt/json
+    status: 404
+    result: no package
+    version: null
+    published: null
+    checked: '2026-09-14'
+  - registry: github
+    endpoint: https://github.com/Augmentt
+    status: 200
+    result: >-
+      The account github.com/Augmentt (Augmentt Technology) exists and resolves, but lists no public
+      repositories - no SDK, no samples, no MCP server. The GitHub REST API returned Not Found for
+      /orgs/Augmentt, consistent with an account holding nothing public.
+    version: null
+    published: null
+    checked: '2026-09-14'
+  - registry: docs
+    endpoint: https://support.augmentt.com/kb/en/augmentt-api-548051
+    status: 200
+    result: >-
+      No SDK, library, CLI or Postman link anywhere in the API section of the customer knowledge
+      base. Integration guidance is a single curl example.
+    version: null
+    published: null
+    checked: '2026-09-14'
+integration_paths_instead:
+  note: >-
+    Augmentt names its real integration routes in the API reference itself, and they are not
+    libraries - they are downstream products consuming the API on the MSP's behalf.
+  named:
+    - BI dashboards
+    - PSA sync
+    - Cork
+    - Gradient MSP
+recommendation_to_provider: >-
+  A single generated client (from a published OpenAPI) in TypeScript and Python would be a
+  disproportionate win here: the API is twelve read-only GETs with two static headers, so a client is
+  a few hundred lines and would remove the hand-rolled HTTP every partner currently writes.

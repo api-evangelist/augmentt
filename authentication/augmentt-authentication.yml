@@ -1,0 +1,72 @@
+generated: '2026-09-14'
+method: searched
+source: https://support.augmentt.com/kb/en/augmentt-api-548051
+provider: Augmentt
+providerId: augmentt
+docs: https://support.augmentt.com/kb/en/augmentt-api-548051
+summary: >-
+  The Augmentt API authenticates with a paired API key: two custom headers, AccessKeyId and
+  AccessKeySecret, sent together on every request. There is no OAuth, no OpenID Connect, no bearer
+  token and no mTLS. Keys are issued by Augmentt support on request — they cannot be generated or
+  rotated self-service in the portal — and the secret cannot be retrieved again after issue.
+apis:
+  - name: Augmentt API
+    spec: openapi/augmentt-api-openapi.yml
+    hosts:
+      - https://api.augmentt.com
+      - https://api.eu.augmentt.com
+      - https://api.apac.augmentt.com
+    schemes:
+      - id: AccessKeyId
+        type: apiKey
+        in: header
+        name: AccessKeyId
+        required: true
+        description: Access Key ID provided by the Augmentt team.
+      - id: AccessKeySecret
+        type: apiKey
+        in: header
+        name: AccessKeySecret
+        required: true
+        description: >-
+          Access Key Secret provided by the Augmentt team. Treat it like a password; it cannot be
+          retrieved from the portal after issue.
+    applied: all-operations
+    combination: both-headers-required
+    oauth2: false
+    openid_connect: false
+    mutual_tls: false
+    bearer: false
+credential_lifecycle:
+  issuance: manual
+  issued_by: Augmentt support (support@augmentt.com)
+  self_service: false
+  request_requires: [Augmentt organization name, description of the intended integration]
+  rotation: >-
+    Contact support for a new key pair. There is no documented self-service rotation or expiry, and
+    no published key-listing or revocation endpoint.
+  retrievable_after_issue: false
+  scopes: none
+  eligibility: >-
+    API access is enabled per organization and is available to partners on Autopilot. Valid keys
+    against an organization without API access enabled return HTTP 403 FORBIDDEN.
+  trial_access: >-
+    Available during a trial; the Augmentt account manager makes the key request on the customer's
+    behalf.
+failure_modes:
+  - status: 401
+    error: UNAUTHORIZED
+    cause: >-
+      Missing or invalid credentials. The docs call out header name spelling (exactly AccessKeyId and
+      AccessKeySecret) and stray whitespace in the values as the common causes.
+  - status: 403
+    error: FORBIDDEN
+    cause: Keys are valid, but API access is not enabled for the organization.
+notes:
+  - Read-only API — every endpoint is GET and no request body is accepted.
+  - >-
+    The same key pair is scoped to one Augmentt organization; a customerId from a different
+    organization returns 404 NOT_FOUND.
+  - >-
+    Regional isolation: NAM, EU and APAC are separate hosts. The documentation does not state whether
+    a key issued in one region is valid in another.

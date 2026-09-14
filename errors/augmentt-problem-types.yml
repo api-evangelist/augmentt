@@ -1,0 +1,66 @@
+generated: '2026-09-14'
+method: searched
+source: https://support.augmentt.com/kb/en/augmentt-api-548051
+provider: Augmentt
+providerId: augmentt
+format: custom-json
+rfc9457: false
+content_type: application/json
+envelope:
+  shape: '{ "error": "<CODE>", "message": "<human readable>" }'
+  fields:
+    - name: error
+      description: Machine-readable error code. Absent on some 400 and 404 responses.
+    - name: message
+      description: Human-readable explanation.
+  note: >-
+    Augmentt does not use application/problem+json (RFC 9457). There is no type URI, no title/status/
+    detail/instance member and no problem-type registry. An unrecognized path returns a bare
+    {"message": "The requested API endpoint is invalid. Please input the correct URL."} with no
+    `error` member, and the API Gateway edge returns {"message":"Missing Authentication Token"} on an
+    anonymous request — observed live 2026-09-14 against https://api.augmentt.com/.
+problem_types:
+  - code: UNAUTHORIZED
+    status: 401
+    title: Missing or invalid credentials
+    detail: The AccessKeyId or AccessKeySecret header is missing or invalid.
+    remediation: >-
+      Confirm both headers are present and spelled exactly AccessKeyId and AccessKeySecret, with no
+      extra whitespace in the values.
+    retriable: false
+  - code: FORBIDDEN
+    status: 403
+    title: API access not enabled
+    detail: The keys are valid, but API access is not enabled for your organization.
+    remediation: Contact Augmentt support to have API access enabled for the organization.
+    retriable: false
+  - code: NOT_FOUND
+    status: 404
+    title: Unknown path or customer
+    detail: >-
+      The endpoint path is unrecognized, or the customerId does not exist in your organization.
+    remediation: >-
+      Confirm the customerId came from /v1/customers for the same organization as your keys. Check
+      the path against the published endpoint table.
+    retriable: false
+  - code: INTERNAL_ERROR
+    status: 500
+    title: Server error
+    detail: An unexpected server-side error occurred.
+    remediation: Retry the request; contact support if it persists.
+    retriable: true
+  - code: null
+    status: 400
+    title: Malformed request
+    detail: The request was malformed. No error code is documented for this status.
+    remediation: Check the request path and headers; no request body should be supplied.
+    retriable: false
+non_error_empty_responses:
+  - endpoints:
+      - getMicrosoftLicenseReport
+      - getMicrosoftLicenseReportAllCompanies
+    behaviour: >-
+      An organization without a Licensing Report Essentials subscription receives an empty array ([])
+      with HTTP 200 rather than an error. A client cannot distinguish "not licensed" from "no data"
+      by status code alone.
+    source: https://support.augmentt.com/kb/en/augmentt-api-548051

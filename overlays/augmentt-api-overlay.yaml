@@ -1,0 +1,67 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Augmentt API
+  version: 1.0.0
+extends: ../openapi/augmentt-api-openapi.yml
+x-generated: '2026-09-14'
+x-method: derived
+x-source: >-
+  Derived from openapi/augmentt-api-openapi.yml plus conventions/augmentt-conventions.yml,
+  lifecycle/augmentt-lifecycle.yml and plans/augmentt-plans-pricing.yml. Applies API Evangelist
+  annotations without mutating the transcribed contract.
+actions:
+  - target: $.info
+    description: Record the entitlement gate and the read-only nature of the surface at document level.
+    update:
+      x-access-model: entitlement
+      x-access-note: >-
+        Not self-serve. API access is enabled per organization by Augmentt for partners on Autopilot;
+        keys are issued by support@augmentt.com on request. Valid keys against an organization
+        without access return 403 FORBIDDEN.
+      x-write-surface: false
+      x-idempotency: na
+      x-reversibility: na
+      x-rate-limits-published: false
+  - target: $.paths..get
+    description: Mark every operation as a side-effect-free read for agent consumption.
+    update:
+      x-agentic-access:
+        action-class: read
+        consequence: none
+        reversible: na
+        escalation: none
+        token: paired-api-key
+  - target: $.paths['/v1/reports/threat/{customerId}'].get
+    description: Record the fixed reporting window the contract cannot express as a parameter.
+    update:
+      x-reporting-window: last-90-days
+      x-date-parameters: false
+  - target: $.paths['/v1/reports/summary/{customerId}'].get
+    description: Record the fixed reporting window the contract cannot express as a parameter.
+    update:
+      x-reporting-window: last-90-days
+      x-date-parameters: false
+  - target: $.paths['/v1/reports/license'].get
+    description: Flag the entitlement gate that returns an empty array with HTTP 200 instead of an error.
+    update:
+      x-requires-entitlement: Licensing Report Essentials
+      x-empty-on-missing-entitlement: true
+      x-reporting-window: current-day-snapshot
+  - target: $.paths['/v1/reports/license/{customerId}'].get
+    description: Flag the entitlement gate that returns an empty array with HTTP 200 instead of an error.
+    update:
+      x-requires-entitlement: Licensing Report Essentials
+      x-empty-on-missing-entitlement: true
+      x-reporting-window: current-day-snapshot
+  - target: $.paths['/v1/customers'].get
+    description: Mark the entry point every other operation depends on.
+    update:
+      x-entry-point: true
+      x-provides: customerId
+  - target: $.components.schemas.Customer.properties.id
+    description: Note the type drift between resources on the same identifier.
+    update:
+      x-alias: [customerId, companyId]
+      x-type-drift: >-
+        Returned as an integer here and as a string on MfaReport.id and MfaEmployee.companyId.
+        Coerce before joining.

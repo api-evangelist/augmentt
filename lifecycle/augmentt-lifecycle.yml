@@ -1,0 +1,71 @@
+generated: '2026-09-14'
+method: searched
+source: https://www.augmentt.com/augmentt-sla/
+provider: Augmentt
+providerId: augmentt
+versioning:
+  scheme: uri-path
+  current: v1
+  released: unknown
+  detail: >-
+    Every documented path is prefixed /v1. No second version exists, no version-negotiation header is
+    documented, and Augmentt publishes no API versioning policy.
+  source: https://support.augmentt.com/kb/en/augmentt-api-548051
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  detail: >-
+    No API deprecation policy, notice period, Sunset header or Deprecation header is published.
+    Probed the KB API section and the subscription agreement 2026-09-14 and found none. The
+    Subscription Agreement governs service changes commercially, not endpoint retirement.
+  deprecated_operations: []
+status_page:
+  published: true
+  url: https://status.augmentt.com/
+  provider: UptimeRobot
+  status: 200
+  checked: '2026-09-14'
+  subscribe: true
+  detail: >-
+    A live per-monitor uptime status page with incident history and email subscription. It is a
+    platform status page; it does not break out api.augmentt.com as a separate monitored component.
+sla:
+  published: true
+  url: https://www.augmentt.com/augmentt-sla/
+  uptime_commitment: 99.9%
+  measurement: Monthly Uptime Percentage, per monthly billing cycle
+  allowance: no more than 43.49 minutes of unavailability per month
+  remedy: service credits
+  maintenance_window: Saturday 00:01 to Sunday 11:59 Eastern
+  exclusions: >-
+    Suspension or remedial action, factors outside Augmentt's reasonable control, customer equipment
+    or software, and announced maintenance are excluded from the commitment.
+  hosting: AWS
+  note: >-
+    The SLA covers the Augmentt Services as a whole under the Subscription Agreement; it does not
+    state a separate availability or latency commitment for the API.
+support:
+  url: https://support.augmentt.com/kb/en
+  ticket: https://support.augmentt.com/kb/en/submit-a-support-ticket-377576
+  email: support@augmentt.com
+  detail: Support is also the issuing channel for API keys and for enabling API access.
+roadmap:
+  published: true
+  url: https://www.augmentt.com/product-roadmap/
+  status: 200
+  checked: '2026-09-14'
+  detail: A public product roadmap page. It covers platform features, not API surface changes.
+release_stream:
+  url: https://www.augmentt.com/blog/category/product/
+  feed: https://www.augmentt.com/blog/category/product/feed/
+  see: changelog/augmentt-changelog.yml
+availability_gate:
+  detail: >-
+    API access is not on by default. It is available to partners on Autopilot and must be enabled per
+    organization by Augmentt; keys are issued by support rather than generated in the portal. Valid
+    keys against an organization without access return 403 FORBIDDEN. The Microsoft License Report
+    endpoints are gated further behind a Licensing Report Essentials subscription and return an empty
+    array with HTTP 200 when it is absent.
+  source: https://support.augmentt.com/kb/en/augmentt-api-548051

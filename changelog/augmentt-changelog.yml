@@ -1,0 +1,77 @@
+generated: '2026-09-14'
+method: searched
+source: https://www.augmentt.com/blog/category/product/
+provider: Augmentt
+providerId: augmentt
+scheme: dated-release-posts
+detail: >-
+  Augmentt has no dedicated /changelog or /release-notes page — those paths soft-404. The real
+  release stream is the Product category of the company blog, where "Augmentt Update:" posts carry
+  dated, itemised release notes. It has a working RSS feed. The notes cover platform and portal
+  features; no API-specific change entries were found, and the /v1 API surface has not been versioned
+  since publication.
+url: https://www.augmentt.com/blog/category/product/
+feed: https://www.augmentt.com/blog/category/product/feed/
+feed_status: 200
+checked: '2026-09-14'
+current_api_version: v1
+api_changes_logged: false
+entries:
+  - date: '2026-09-14'
+    title: 'Augmentt Update: Teams Settings Go Templatable, and Purview Ships a Curated Policy Library'
+    url: https://www.augmentt.com/blog/augmentt-update-teams-templatable-purview-policy-library/
+    kind: release
+    breaking: false
+    highlights:
+      - Teams settings become templatable across tenants
+      - Curated Purview policy library
+  - date: '2026-09-01'
+    title: SharePoint, Purview and Teams, Managed Across Every Client Tenant
+    url: https://www.augmentt.com/blog/sharepoint-purview-and-teams-managed-across-every-client-tenant/
+    kind: product
+    breaking: false
+  - date: '2026-08-19'
+    title: 'Augmentt Update: Teams Policy Management Goes Live, and Purview DLP Coverage Expands'
+    url: https://www.augmentt.com/blog/augmentt-update-teams-policies-purview-dlp-defender-eop/
+    kind: release
+    breaking: false
+    highlights:
+      - Teams policy management goes live
+      - Purview DLP coverage expands to Copilot and Foundry
+      - Two new email posture checks
+      - Defender EOP per-check fix wizard
+  - date: '2026-08-04'
+    title: 'Augmentt Update: Fix a Check Across Every Failing Tenant, and AI Risk Report Goes GA'
+    url: https://www.augmentt.com/blog/augmentt-release-ai-risk-report-ga-purview-dlp-compliance-audit/
+    kind: release
+    breaking: false
+    highlights:
+      - Remediate a failing compliance check across every affected tenant from one screen
+      - AI Risk Report out of beta
+      - Purview DLP policy templating
+      - Break-glass accounts and SharePoint added to the Compliance Audit
+  - date: '2026-06-26'
+    title: 'What''s New in Augmentt: Intune Management Gets Bigger'
+    url: https://www.augmentt.com/blog/whats-new-in-augmentt-intune-management-gets-bigger/
+    kind: release
+    breaking: false
+  - date: '2026-05-14'
+    title: Introducing Dark Mode in Augmentt
+    url: https://www.augmentt.com/blog/introducing-dark-mode/
+    kind: release
+    breaking: false
+  - date: '2026-03-30'
+    title: Announcing Multi-CSP Support in Augmentt
+    url: https://www.augmentt.com/blog/announcing-multi-csp-support-in-augmentt/
+    kind: release
+    breaking: false
+  - date: '2025-11-18'
+    title: 'Introducing Augmentt Intune Autopilot: Intune Made Easy at MSP Scale'
+    url: https://www.augmentt.com/blog/augmentt-intune-autopilot-for-msps/
+    kind: release
+    breaking: false
+  - date: '2025-11-11'
+    title: Augmentt is Now Live on Pax8 Marketplace
+    url: https://www.augmentt.com/blog/augmentt-is-now-live-on-pax8-marketplace/
+    kind: distribution
+    breaking: false

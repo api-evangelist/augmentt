@@ -1,0 +1,1094 @@
+openapi: 3.1.0
+info:
+  title: Augmentt API
+  version: '1.0'
+  summary: Read-only reporting API for the Augmentt Microsoft 365 management platform for MSPs.
+  description: >-
+    The Augmentt API lets an MSP pull the data behind Augmentt's reports — customers, Augmentt module
+    license consumption, MFA, security posture, Microsoft 365 licensing, threat and summary reports —
+    into their own systems.
+
+
+    IMPORTANT — PROVENANCE. This document was NOT published by Augmentt. It was transcribed by API
+    Evangelist from Augmentt's own public API reference in the Augmentt Customer Knowledge Base
+    (https://support.augmentt.com/kb/en/augmentt-api-548051, read 2026-09-14). Every path, method,
+    header, status code, property name and example below is taken from that reference; nothing was
+    invented. Augmentt publishes no machine-readable contract of its own — see
+    `x-generated-from` and `x-source` below. Treat schema depth as documentation-fidelity, not
+    contract-fidelity: the reference describes top-level response properties and their members in
+    prose tables, so nested objects are modelled to the depth the provider documents and no further.
+
+
+    Availability: the API is available to partners on Autopilot; API keys are issued by Augmentt
+    support, not self-served from the portal. All endpoints are GET and no request body is used.
+  contact:
+    name: Augmentt Support
+    email: support@augmentt.com
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
+  termsOfService: https://www.augmentt.com/subscription-agreement/
+x-generated-from: documentation
+x-authored-by: API Evangelist
+x-modeled-from: https://support.augmentt.com/kb/en/augmentt-api-548051
+x-source-read: '2026-09-14'
+x-first-party: false
+servers:
+  - url: https://api.augmentt.com
+    description: North America (NAM)
+  - url: https://api.eu.augmentt.com
+    description: Europe (EU)
+  - url: https://api.apac.augmentt.com
+    description: Asia Pacific (APAC)
+security:
+  - AccessKeyId: []
+    AccessKeySecret: []
+tags:
+  - name: Customers
+    description: Companies (tenants) configured under Configuration > Companies in the Augmentt portal.
+  - name: Licensing
+    description: Augmentt module license consumption and Microsoft 365 licensing reports.
+  - name: Security Reports
+    description: MFA, security posture, threat and summary reporting for managed tenants.
+paths:
+  /v1/customers:
+    get:
+      operationId: listCustomers
+      summary: List all customers
+      description: >-
+        Returns every active company configured under Configuration > Companies for the organization
+        the API keys belong to. The `id` returned here is the `customerId` used by every other
+        endpoint. Deactivated companies are excluded from report roll-ups; the `deactivated` property
+        lets you confirm a company's state.
+      tags: [Customers]
+      responses:
+        '200':
+          description: A collection of customer objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+              examples:
+                allCustomers:
+                  summary: List all customers (verbatim from the Augmentt API reference)
+                  value:
+                    - id: 123
+                      customer_name: Company 1
+                      organization: 1234
+                      parent_id: null
+                      deactivated: null
+                      psa_email: email@company1.com
+                      applied_template: null
+                      integrations:
+                        - id: a1b2c3
+                          type: psa
+                        - id: 1a2b3c
+                          type: m365
+                    - id: 124
+                      customer_name: Company 2
+                      organization: 1234
+                      parent_id: 123
+                      deactivated: null
+                      psa_email: null
+                      applied_template: null
+                      integrations:
+                        - id: a1b2c3
+                          type: psa
+                        - id: 1a2b3c
+                          type: m365
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/customers/{customerId}:
+    get:
+      operationId: getCustomer
+      summary: Get a single customer
+      description: Returns the single company identified by `customerId`, in the same shape as the list response.
+      tags: [Customers]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: A single customer object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+              examples:
+                singleCustomer:
+                  summary: List a single customer (verbatim from the Augmentt API reference)
+                  value:
+                    id: 123
+                    customer_name: Company 1
+                    organization: 1234
+                    parent_id: null
+                    deactivated: null
+                    psa_email: email@company1.com
+                    applied_template: null
+                    integrations:
+                      - id: a1b2c3
+                        type: psa
+                      - id: 1a2b3c
+                        type: m365
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/customers/licenses:
+    get:
+      operationId: listCustomerLicenses
+      summary: List Augmentt module license consumption for all customers
+      description: >-
+        Returns Augmentt product license consumption per customer, as shown under
+        Management > License Center in the Augmentt portal — the Secure, Engage and Discover seat
+        counts you are billed for. This is NOT Microsoft 365 licensing; for that use
+        `getMicrosoftLicenseReportAllCompanies`.
+      tags: [Licensing]
+      responses:
+        '200':
+          description: A collection of per-customer Augmentt module license objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerLicenses'
+              examples:
+                allCustomerLicenses:
+                  summary: List all customers (verbatim from the Augmentt API reference)
+                  value:
+                    - customerId: 123
+                      licenses:
+                        - { type: discover, count: 31 }
+                        - { type: engage, count: 31 }
+                        - { type: secure, count: 31 }
+                    - customerId: 124
+                      licenses:
+                        - { type: discover, count: 76 }
+                        - { type: engage, count: 76 }
+                        - { type: secure, count: 76 }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/customers/{customerId}/licenses:
+    get:
+      operationId: getCustomerLicenses
+      summary: Get Augmentt module license consumption for one customer
+      description: Returns the Augmentt module (Secure, Engage, Discover) seat consumption for a single company.
+      tags: [Licensing]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: A single-element collection holding the customer's Augmentt module licenses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerLicenses'
+              examples:
+                singleCustomerLicenses:
+                  summary: List a single customer (verbatim from the Augmentt API reference)
+                  value:
+                    - customerId: 123
+                      licenses:
+                        - { type: discover, count: 31 }
+                        - { type: engage, count: 31 }
+                        - { type: secure, count: 31 }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/mfa:
+    get:
+      operationId: getMfaReportAllCompanies
+      summary: Get the MFA report rolled up across all companies
+      description: >-
+        Returns the Secure > MFA Report roll-up for every active company — authentication methods in
+        use, MFA configuration mix, MFA status totals, and a per-company breakdown.
+      tags: [Security Reports]
+      responses:
+        '200':
+          description: MFA roll-up across all active companies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaReportAllCompanies'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/mfa/{customerId}:
+    get:
+      operationId: getMfaReport
+      summary: Get the MFA report for one company
+      description: >-
+        Returns the full Secure > MFA Report for a single tenant — authentication methods, MFA
+        configurations, MFA status totals, and the per-employee detail including roles, Microsoft
+        licenses, MFA status, registration state and the conditional access policies affecting them.
+      tags: [Security Reports]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: The MFA report for the requested company.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaReport'
+              examples:
+                mfaReport:
+                  summary: MFA report (verbatim from the Augmentt API reference)
+                  value:
+                    id: '123'
+                    name: Company1
+                    authenticationMethods: { authenticationApp: 15, phoneSms: 16, securityKey: 0, other: 33 }
+                    mfaConfiguration: { duoAndCap: 0, perUserMfa: 0, securityDefault: 0, cap: 22 }
+                    mfaStatus: { protected: 31, notProtected: 2, signInBlocked: 0 }
+                    employees:
+                      - email: johndoe@company1.com
+                        displayName: John Doe
+                        firstName: John
+                        lastName: Doe
+                        companyId: '123'
+                        licenseType: [Intune, Microsoft 365 Business Premium]
+                        role: [Global Administrator]
+                        mfaStatus:
+                          status: PROTECTED
+                          statusList:
+                            - { type: M365, status: REGISTERED }
+                        mfaRegistration: Registered
+                        authenticationType: [phone, password, authenticator]
+                        userId: a12333b-c123-12d1-234e-1f123g1h01ij
+                        isUserSigninEnabled: true
+                        mfaConfigurations:
+                          configurationStatus: CAP
+                          affectedByCAs:
+                            - policyId: 7f8042ed-8fa5-43e5-a8d5-07a1553473c
+                              policyName: MFA All Users
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/posture:
+    get:
+      operationId: getPostureReportAllCompanies
+      summary: Get the security posture report rolled up across all companies
+      description: >-
+        Returns the Secure > Security Posture roll-up — posture recommendation counts, configuration
+        status totals, and a per-company breakdown of the same.
+      tags: [Security Reports]
+      responses:
+        '200':
+          description: Security posture roll-up across all active companies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostureReportAllCompanies'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/posture/{customerId}:
+    get:
+      operationId: getPostureReport
+      summary: Get the security posture report for one company
+      description: >-
+        Returns the full Secure > Security Posture report for a single tenant — posture
+        recommendations, configuration status counts, and the security checks themselves grouped by
+        state (allMonitored, configured, partiallyConfigured, notConfigured, notMeasured, ignored,
+        resolved). Checks disabled for the tenant are returned under `ignored` and are excluded from
+        `allMonitored` and from the `configurationStatus` counts.
+      tags: [Security Reports]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: The security posture report for the requested company.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostureReport'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/license:
+    get:
+      operationId: getMicrosoftLicenseReportAllCompanies
+      summary: Get the Microsoft 365 license report rolled up across all companies
+      description: >-
+        Returns the Microsoft 365 License Report roll-up — license types, month-over-month trends,
+        an active/assigned overview, and a per-company breakdown. Requires a Licensing Report
+        Essentials subscription; organizations without it receive an empty array with HTTP 200
+        rather than an error. The report is generated against the current day, so check
+        `missingLatestMonth` and `missingPreviousMonth` before comparing months.
+      tags: [Licensing]
+      responses:
+        '200':
+          description: >-
+            The Microsoft license roll-up, or an empty array when the organization is not licensed
+            for Licensing Report Essentials.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MicrosoftLicenseReportAllCompanies'
+                  - type: array
+                    maxItems: 0
+                    description: Empty array returned when Licensing Report Essentials is not enabled.
+                    items: {}
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/license/{customerId}:
+    get:
+      operationId: getMicrosoftLicenseReport
+      summary: Get the Microsoft 365 license report for one company
+      description: >-
+        Returns the Microsoft 365 License Report for a single tenant — license types and counts,
+        monthly trends, subscription renewal dates and commitments, an active/assigned overview, and
+        per-user assignments and changes. Requires a Licensing Report Essentials subscription;
+        organizations without it receive an empty array with HTTP 200.
+      tags: [Licensing]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: >-
+            The Microsoft license report for the requested company, or an empty array when
+            Licensing Report Essentials is not enabled.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MicrosoftLicenseReport'
+                  - type: array
+                    maxItems: 0
+                    description: Empty array returned when Licensing Report Essentials is not enabled.
+                    items: {}
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/threat/{customerId}:
+    get:
+      operationId: getThreatReport
+      summary: Get the threat report for one company
+      description: >-
+        Returns the Secure > Threat Report for a single tenant — total risk detections, the
+        detection trend series, detection locations for the map, Microsoft Identity and Secure
+        Score values, risk detection severity counts with the top five risk types and accounts, and
+        the at-risk accounts broken out by MFA status, MFA registration and inactivity. The
+        reporting period is fixed at the last 90 days; the endpoint accepts no date parameters and
+        requires a customerId (there is no all-companies roll-up).
+      tags: [Security Reports]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: The threat report for the requested company.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreatReport'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /v1/reports/summary/{customerId}:
+    get:
+      operationId: getSummaryReport
+      summary: Get the summary report for one company
+      description: >-
+        Returns the Secure > Summary Report for a single tenant — prevented incident totals and
+        trends, Microsoft Identity and Secure Score values, the MFA protection summary with its
+        trend series, and prevented risky sign-ins, risky accounts, risky countries, IP addresses,
+        data loss events and legacy authentication attempts. The reporting period is fixed at the
+        last 90 days and a customerId is required.
+      tags: [Security Reports]
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: The summary report for the requested company.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryReport'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+components:
+  securitySchemes:
+    AccessKeyId:
+      type: apiKey
+      in: header
+      name: AccessKeyId
+      description: >-
+        The Access Key ID issued by Augmentt support. Must be sent on every request alongside
+        AccessKeySecret. Keys cannot be generated in the portal; request them from
+        support@augmentt.com.
+    AccessKeySecret:
+      type: apiKey
+      in: header
+      name: AccessKeySecret
+      description: >-
+        The Access Key Secret issued by Augmentt support. Treat it like a password — it cannot be
+        retrieved from the portal after issue. Contact support for a new key pair if it is lost.
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      description: The company identifier, taken from the `id` field of /v1/customers.
+      schema:
+        type: integer
+  responses:
+    BadRequest:
+      description: Malformed request.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: UNAUTHORIZED, message: Missing or invalid credentials }
+    Forbidden:
+      description: Keys are valid, but API access is not enabled for your organization.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: FORBIDDEN, message: API access is not enabled for this organization }
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: INTERNAL_ERROR, message: Unexpected server error }
+  schemas:
+    Error:
+      type: object
+      description: The documented error envelope, returned as JSON on every non-2xx response.
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          enum: [UNAUTHORIZED, FORBIDDEN, NOT_FOUND, INTERNAL_ERROR]
+        message:
+          type: string
+          description: Human-readable explanation.
+    Customer:
+      type: object
+      description: A company (tenant) configured under Configuration > Companies in the Augmentt portal.
+      properties:
+        id:
+          type: integer
+          description: Unique tenant identifier; the customerId used to drill into every report.
+        customer_name:
+          type: string
+          description: Name of the tenant.
+        organization:
+          type: integer
+          description: Unique organization identifier — your main account id.
+        parent_id:
+          type: [integer, 'null']
+          description: >-
+            The id of the main tenant this company is nested under. Null on the main account company.
+        deactivated:
+          type: [boolean, 'null']
+          description: Whether the customer has been deactivated in the portal. Default null.
+        psa_email:
+          type: [string, 'null']
+          description: Email used for alert notifications / PSA tickets. Default null.
+        applied_template:
+          type: [integer, 'null']
+          description: >-
+            Numeric id of the Posture Template (Secure > Security Posture > Posture Templates)
+            applied to this customer, or null. Template names are not returned by the API. This is
+            not a Compliance Audit assessment.
+        integrations:
+          type: array
+          description: Integrations connected for this tenant.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Identifier of the integration instance.
+              type:
+                type: string
+                description: Integration type, for example psa or m365.
+    CustomerLicenses:
+      type: object
+      description: Augmentt module license consumption for one customer.
+      properties:
+        customerId:
+          type: integer
+          description: Unique tenant identifier, the same value as Customer.id.
+        licenses:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: The licensed Augmentt module.
+                enum: [discover, engage, secure]
+              count:
+                type: integer
+                description: Number of licensed users for the module.
+    AuthenticationMethods:
+      type: object
+      description: Count of employees by authentication method in use.
+      properties:
+        authenticationApp: { type: integer, description: Authenticator App }
+        phoneSms: { type: integer, description: Phone call or SMS }
+        securityKey: { type: integer, description: Such as a FIDO2 security key }
+        other: { type: integer, description: Other authentication methods }
+    MfaConfiguration:
+      type: object
+      description: Count of employees by MFA configuration mechanism.
+      properties:
+        duoAndCap: { type: integer, description: DUO and Conditional Access Policy }
+        perUserMfa: { type: integer, description: Legacy MFA (per-user MFA) }
+        securityDefault: { type: integer, description: Security Defaults }
+        cap: { type: integer, description: Conditional Access Policy }
+    MfaStatusSummary:
+      type: object
+      description: Count of employees by MFA protection state.
+      properties:
+        protected: { type: integer, description: MFA is registered and enforced }
+        notProtected: { type: integer, description: MFA is not required or not registered }
+        signInBlocked:
+          type: integer
+          description: >-
+            The account cannot be accessed and, while not compliant with MFA, is therefore safe.
+    MfaEmployee:
+      type: object
+      description: One employee row in the MFA report.
+      properties:
+        email: { type: string, description: User's email address }
+        displayName: { type: string, description: User's display name }
+        firstName: { type: string, description: User's first name }
+        lastName: { type: string, description: User's last name }
+        companyId: { type: string, description: Unique tenant identifier, also referred to as customerId }
+        licenseType:
+          type: array
+          description: Microsoft 365 licenses assigned to the user.
+          items: { type: string }
+        role:
+          type: array
+          description: Roles assigned to the user.
+          items: { type: string }
+        mfaStatus:
+          type: object
+          description: The user's MFA protection detail.
+          properties:
+            status: { type: string, description: Status of MFA protection }
+            statusList:
+              type: array
+              description: MFA protections in use by the user.
+              items:
+                type: object
+                properties:
+                  type: { type: string, description: Type of MFA protection }
+                  status: { type: string, description: Status of that protection }
+        mfaRegistration: { type: string, description: Status of MFA registration }
+        authenticationType:
+          type: array
+          description: Authentication methods in use by the user.
+          items: { type: string }
+        userId: { type: string, description: Microsoft's user ID }
+        isUserSigninEnabled: { type: boolean, description: Whether sign-in is enabled for the user }
+        mfaConfigurations:
+          type: object
+          description: The user's MFA configuration detail.
+          properties:
+            configurationStatus:
+              type: string
+              description: Status of the MFA enforcement methods applied to the user.
+            affectedByCAs:
+              type: array
+              description: Conditional Access Policies affecting the user.
+              items:
+                type: object
+                properties:
+                  policyId: { type: string, description: ID of the Conditional Access Policy }
+                  policyName: { type: string, description: Name of the Conditional Access Policy }
+    MfaReport:
+      type: object
+      description: Secure > MFA Report for a single tenant.
+      properties:
+        id: { type: string, description: Unique tenant identifier, also referred to as customerId }
+        name: { type: string, description: Name of the tenant }
+        authenticationMethods: { $ref: '#/components/schemas/AuthenticationMethods' }
+        mfaConfiguration: { $ref: '#/components/schemas/MfaConfiguration' }
+        mfaStatus: { $ref: '#/components/schemas/MfaStatusSummary' }
+        employees:
+          type: array
+          items: { $ref: '#/components/schemas/MfaEmployee' }
+        applied_template:
+          type: [integer, 'null']
+          description: Numeric id of the Posture Template applied to this customer, or null.
+    MfaReportAllCompanies:
+      type: object
+      description: Secure > MFA Report rolled up across all active companies.
+      properties:
+        authenticationMethods: { $ref: '#/components/schemas/AuthenticationMethods' }
+        mfaStatus: { $ref: '#/components/schemas/MfaStatusSummary' }
+        mfaConfiguration: { $ref: '#/components/schemas/MfaConfiguration' }
+        companies:
+          type: array
+          description: Per-company MFA detail.
+          items: { $ref: '#/components/schemas/MfaReport' }
+    PostureRecommendations:
+      type: object
+      properties:
+        count: { type: integer, description: Count of active posture recommendations }
+        total: { type: integer, description: Total count of posture recommendations }
+    PostureConfigurationStatus:
+      type: object
+      properties:
+        configured: { type: integer, description: Postures with Configured status }
+        partiallyConfigured: { type: integer, description: Postures with Partially Configured status }
+        notConfigured: { type: integer, description: Postures with Not Configured status }
+        notMeasured: { type: integer, description: Postures with Not Measured status }
+        resolved: { type: integer, description: Postures with Resolved status }
+    SecurityCheck:
+      type: object
+      description: >-
+        One security check in the posture report. The reference documents each check as carrying its
+        name, check id, source, category, status, license requirement, Microsoft Secure Score impact,
+        configuration issues and compliance details.
+      properties:
+        securityCheck: { type: string, description: The name of the security check }
+        checkId: { type: string, description: Unique identifier of the security check }
+        source:
+          type: string
+          description: >-
+            The source of the security check — `internal` for a check built and maintained by
+            Augmentt, or an external check provider such as maester.
+    PostureReport:
+      type: object
+      description: Secure > Security Posture report for a single tenant.
+      properties:
+        postureRecommendations: { $ref: '#/components/schemas/PostureRecommendations' }
+        configurationStatus: { $ref: '#/components/schemas/PostureConfigurationStatus' }
+        securityChecks:
+          type: object
+          description: Security checks grouped by state.
+          properties:
+            allMonitored:
+              type: array
+              description: Monitored security postures in the tenant.
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+            configured:
+              type: array
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+            partiallyConfigured:
+              type: array
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+            notConfigured:
+              type: array
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+            notMeasured:
+              type: array
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+            ignored:
+              type: array
+              description: >-
+                Checks disabled for this tenant. Still returned here, but excluded from
+                allMonitored and from the configurationStatus counts.
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+            resolved:
+              type: array
+              items: { $ref: '#/components/schemas/SecurityCheck' }
+    PostureReportAllCompanies:
+      type: object
+      description: Secure > Security Posture rolled up across all active companies.
+      properties:
+        postureRecommendations: { $ref: '#/components/schemas/PostureRecommendations' }
+        configurationStatus: { $ref: '#/components/schemas/PostureConfigurationStatus' }
+        companies:
+          type: array
+          description: Per-tenant security posture detail.
+          items: { $ref: '#/components/schemas/PostureReport' }
+    LicenseType:
+      type: object
+      properties:
+        planName: { type: string, description: Name of the Microsoft license }
+        count: { type: integer, description: Count of active licenses }
+    LicenseTrend:
+      type: object
+      properties:
+        date: { type: string, description: Last day of the month used as a delta indicator }
+        enabledCount: { type: integer, description: Count of enabled licenses }
+        assignedCount: { type: integer, description: Count of assigned licenses }
+    LicenseRenewal:
+      type: object
+      properties:
+        planName: { type: string, description: Name of the Microsoft license }
+        subscriptions:
+          type: array
+          items:
+            type: object
+            properties:
+              subscriptionId: { type: string, description: Microsoft's subscription unique identifier }
+              nextLifecycleDateTime: { type: string, description: Next renewal date }
+              estimatedCommitment: { type: string, description: Estimated commitment (Monthly/Yearly) }
+              subscriptionTotalLicenses: { type: integer, description: License count in the subscription }
+    LicenseOverview:
+      type: object
+      properties:
+        licenses:
+          type: array
+          description: Active license details.
+          items:
+            type: object
+            properties:
+              planName: { type: string }
+              count: { type: integer, description: Count of enabled licenses }
+              change: { type: integer, description: Licenses added or removed based on trends }
+        assigned:
+          type: array
+          description: Assigned license details.
+          items:
+            type: object
+            properties:
+              planName: { type: string }
+              count: { type: integer, description: Count of enabled licenses }
+              total: { type: integer, description: Total licenses in the plan }
+              change: { type: integer, description: Licenses added or removed based on trends }
+    MicrosoftLicenseReport:
+      type: object
+      description: Microsoft 365 License Report for a single tenant.
+      properties:
+        types:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseType' }
+        trends:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseTrend' }
+        renewals:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseRenewal' }
+        overview: { $ref: '#/components/schemas/LicenseOverview' }
+        users:
+          type: array
+          description: Users with their license assignments and changes.
+          items: { type: object }
+        missingLatestMonth:
+          type: boolean
+          description: >-
+            True when the current month's snapshot is not yet finalized. Check before comparing
+            month-over-month figures.
+        missingPreviousMonth:
+          type: boolean
+          description: True when the previous month's snapshot is missing.
+        latestSnapshot: { type: string, description: Latest snapshot ID }
+        previousSnapshot: { type: string, description: Previous snapshot ID }
+    MicrosoftLicenseReportAllCompanies:
+      type: object
+      description: Microsoft 365 License Report rolled up across all active companies.
+      properties:
+        types:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseType' }
+        trends:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseTrend' }
+        overview: { $ref: '#/components/schemas/LicenseOverview' }
+        companies:
+          type: array
+          description: Companies with their license assignments and changes.
+          items: { type: object }
+        missingLatestMonth: { type: boolean }
+        missingPreviousMonth: { type: boolean }
+    IntegrationScore:
+      type: object
+      properties:
+        value: { type: number, description: Score achieved }
+        count: { type: integer, description: Points achieved }
+        total: { type: integer, description: Total points }
+    AtRiskAccount:
+      type: object
+      properties:
+        id: { type: integer, description: User's unique ID }
+        displayName: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        username: { type: string, description: User's email address (service principal) }
+        licenseType: { type: array, items: { type: string } }
+        role: { type: array, items: { type: string } }
+        group: { type: array, items: { type: string } }
+        mfaStatus: { type: string, description: Status of MFA protection }
+        mfaRegistration: { type: string, description: Status of MFA registration }
+        lastActive: { type: string, description: Days since last login }
+        isInactive: { type: boolean }
+        userId: { type: string, description: Microsoft's user ID }
+        lastAppActivity: { type: [string, 'null'], description: Last application with recorded user activity }
+    ThreatReport:
+      type: object
+      description: Secure > Threat Report for a single tenant. Fixed 90-day reporting window.
+      properties:
+        totalRiskDetections: { type: integer, description: Total risk detections in the window }
+        riskDetectionsTrend:
+          type: array
+          description: Risk detection trend series.
+          items:
+            type: object
+            properties:
+              key: { type: integer, description: Timestamp of the snapshot }
+              value: { type: integer, description: Risk detections count in the snapshot }
+        locationOfRiskDetections:
+          type: object
+          description: Geographic distribution of risk detections, used by the UI map.
+          properties:
+            markers:
+              type: array
+              items:
+                type: object
+                properties:
+                  risk: { type: string, description: Risk level of the event }
+                  coordinates:
+                    type: array
+                    description: Latitude and longitude.
+                    items: { type: number }
+                  radius: { type: number, description: Radius range from the coordinate point }
+            risksByCountry:
+              type: array
+              items:
+                type: object
+                properties:
+                  country: { type: string, description: Country of origin (2 character identifier) }
+                  highRisks: { type: integer }
+                  mediumRisks: { type: integer }
+                  lowRisks: { type: integer }
+                  informationalRisks: { type: integer }
+                  unknownRisks: { type: [integer, 'null'] }
+                  riskCount: { type: integer, description: Total count of risky events }
+        integrationComplianceScore:
+          type: object
+          description: Microsoft Identity Score achieved.
+          properties:
+            value: { type: number }
+        integrationSecurityScore: { $ref: '#/components/schemas/IntegrationScore' }
+        riskDetections:
+          type: object
+          description: Summary of risky events detected.
+          properties:
+            highRisk: { type: integer }
+            mediumRisk: { type: integer }
+            lowRisk: { type: integer }
+            informationalRisk: { type: integer }
+            unknownRisk: { type: [integer, 'null'] }
+            top5Types:
+              type: array
+              items:
+                type: object
+                properties:
+                  riskType: { type: string, description: Type of risky event }
+                  count: { type: integer }
+            top5AccountsAtRisk:
+              type: array
+              items:
+                type: object
+                properties:
+                  account: { type: string, description: User's full name }
+                  role: { type: array, items: { type: string } }
+                  count: { type: integer }
+                  userId: { type: string, description: Microsoft's user ID }
+            risks:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string, description: Identifier of the incident position in the array }
+                  riskType: { type: string }
+                  displayName: { type: string }
+                  firstName: { type: string }
+                  lastName: { type: string }
+                  location: { type: string, description: Country of origin (2 character identifier) }
+                  severity: { type: string }
+                  date: { type: string, description: Date of the event (yyyy-mm-dd) }
+                  userId: { type: string }
+        atRiskAccounts:
+          type: object
+          description: Accounts at risk, grouped by the reason they are at risk.
+          properties:
+            mfaStatus:
+              type: object
+              properties:
+                count: { type: integer }
+                overview:
+                  type: object
+                  properties:
+                    protected: { type: integer }
+                    notProtected: { type: integer }
+                    signInBlocked: { type: integer }
+                accounts:
+                  type: array
+                  items: { $ref: '#/components/schemas/AtRiskAccount' }
+            mfaRegistration:
+              type: object
+              properties:
+                count: { type: integer }
+                overview:
+                  type: object
+                  properties:
+                    registered: { type: integer }
+                    notRegistered: { type: integer }
+                    unknown: { type: integer }
+                accounts:
+                  type: array
+                  items: { $ref: '#/components/schemas/AtRiskAccount' }
+            inactiveAccounts:
+              type: object
+              properties:
+                count: { type: integer }
+                overview:
+                  type: object
+                  properties:
+                    inactive: { type: integer }
+                    active: { type: integer }
+                accounts:
+                  type: array
+                  items: { $ref: '#/components/schemas/AtRiskAccount' }
+    SummaryReport:
+      type: object
+      description: Secure > Summary Report for a single tenant. Fixed 90-day reporting window.
+      properties:
+        totalPreventedIncidents: { type: integer, description: Count of prevented incidents in the tenant }
+        incidentTrends:
+          type: array
+          items:
+            type: object
+            properties:
+              key: { type: integer, description: Timestamp of the snapshot }
+              value: { type: integer, description: Incident count in the snapshot }
+        integrationComplianceScore:
+          type: object
+          description: Microsoft Identity Score achieved.
+          properties:
+            value: { type: number }
+        integrationSecurityScore: { $ref: '#/components/schemas/IntegrationScore' }
+        mfaStatus:
+          type: object
+          description: MFA protection summary for the tenant.
+          properties:
+            protected: { type: integer }
+            notProtected: { type: integer }
+            trends:
+              type: array
+              description: MFA protection trends over time, charted in the UI.
+              items:
+                type: object
+                properties:
+                  timestamp: { type: integer }
+                  protected: { type: number, description: Percentage of protected users }
+                  notProtected: { type: number, description: Percentage of users not protected }
+                  counts:
+                    type: object
+                    properties:
+                      protected: { type: integer }
+                      notProtected: { type: integer }
+                      signInBlocked: { type: integer }
+        preventedRiskySignIns:
+          type: object
+          properties:
+            total: { type: integer }
+            topAccounts:
+              type: array
+              items:
+                type: object
+                properties:
+                  user: { type: string }
+                  count: { type: integer }
+                  userId: { type: string }
+        preventedRiskyAccounts:
+          type: object
+          properties:
+            total: { type: integer }
+            topAccounts:
+              type: array
+              items:
+                type: object
+                properties:
+                  user: { type: string }
+                  count: { type: integer }
+                  userId: { type: string }
+        preventedRiskyCountries:
+          type: object
+          properties:
+            total: { type: integer }
+            topCountries:
+              type: array
+              items:
+                type: object
+                properties:
+                  country: { type: string }
+                  count: { type: integer }
+        preventedIpAddresses:
+          type: object
+          properties:
+            total: { type: integer }
+            topIps:
+              type: array
+              items:
+                type: object
+                properties:
+                  ip: { type: string }
+                  country: { type: string }
+                  count: { type: integer }
+        preventedDataLossEvents:
+          type: object
+          description: Summary of data loss incidents.
+        preventedLegacyAuthAttempts:
+          type: object
+          description: Summary of legacy authentication incidents.
+        preventedIncidents:
+          type: object
+          properties:
+            total: { type: integer, description: Count of prevented incidents }
+            remediated: { type: integer, description: Count of remediated incidents }
+            recognized: { type: integer, description: Count of identified incidents }
+            incidents:
+              type: array
+              items:
+                type: object
+                properties:
+                  id: { type: string }
+                  type: { type: string, description: Risk event type }
+                  userImpacted: { type: string, description: Targeted user in the event }
+                  action: { type: string, description: Remediation action taken }
+                  category: { type: string, description: Event category }
+                  location: { type: string, description: Country of origin (2 character identifier) }
+                  date: { type: string, description: Date of the event (yyyy-mm-dd) }
+                  userId: { type: string }

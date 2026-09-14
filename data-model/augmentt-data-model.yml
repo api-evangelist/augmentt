@@ -1,0 +1,163 @@
+generated: '2026-09-14'
+method: derived
+source: openapi/augmentt-api-openapi.yml
+provider: Augmentt
+providerId: augmentt
+summary: >-
+  The Augmentt reporting data model is rooted at the Organization (your MSP account) which owns many
+  Customers (client tenants). Every report hangs off a Customer by its integer `id`, which the API
+  calls `customerId` on licenses objects and `companyId` on MFA employee rows. Employees and at-risk
+  accounts are keyed by Microsoft's `userId` (a GUID), which is the only identifier shared across the
+  MFA, threat and summary reports.
+root_entity: Customer
+id_conventions:
+  - entity: Customer
+    field: id
+    type: integer
+    aliases: [customerId, companyId]
+    note: >-
+      Returned as an integer by /v1/customers and as a string by the MFA report (`id`, `companyId`).
+      Clients should coerce.
+  - entity: Organization
+    field: organization
+    type: integer
+    note: Your main Augmentt account id, repeated on every customer row.
+  - entity: Employee / AtRiskAccount
+    field: userId
+    type: string (GUID)
+    note: Microsoft's user ID. The join key across MFA, threat and summary reports.
+  - entity: SecurityCheck
+    field: checkId
+    type: string
+  - entity: PostureTemplate
+    field: applied_template
+    type: integer
+    note: Template ids are returned; template names are not exposed by the API.
+  - entity: MicrosoftSubscription
+    field: subscriptionId
+    type: string
+    note: Microsoft's subscription identifier, surfaced in license renewals.
+entities:
+  - name: Organization
+    description: The MSP account holding the API keys.
+    source_schema: Customer.organization
+  - name: Customer
+    description: A managed client tenant, configured under Configuration > Companies.
+    source_schema: Customer
+  - name: Integration
+    description: A connected system on a customer — PSA or Microsoft 365.
+    source_schema: Customer.integrations[]
+  - name: CustomerLicenses
+    description: Augmentt module (Secure/Engage/Discover) seat consumption for a customer.
+    source_schema: CustomerLicenses
+  - name: MfaReport
+    description: Per-tenant MFA posture with per-employee detail.
+    source_schema: MfaReport
+  - name: MfaEmployee
+    description: One user row inside the MFA report.
+    source_schema: MfaEmployee
+  - name: ConditionalAccessPolicy
+    description: A Microsoft conditional access policy affecting a user.
+    source_schema: MfaEmployee.mfaConfigurations.affectedByCAs[]
+  - name: PostureReport
+    description: Per-tenant security posture with checks grouped by configuration state.
+    source_schema: PostureReport
+  - name: SecurityCheck
+    description: One security posture check, internal to Augmentt or sourced externally (e.g. maester).
+    source_schema: SecurityCheck
+  - name: MicrosoftLicenseReport
+    description: Per-tenant Microsoft 365 licensing, trends, renewals and per-user assignment.
+    source_schema: MicrosoftLicenseReport
+  - name: LicenseRenewal
+    description: Renewal dates and commitments per Microsoft subscription.
+    source_schema: LicenseRenewal
+  - name: ThreatReport
+    description: Per-tenant risk detections, locations, scores and at-risk accounts, last 90 days.
+    source_schema: ThreatReport
+  - name: AtRiskAccount
+    description: A user flagged by MFA status, MFA registration or inactivity.
+    source_schema: AtRiskAccount
+  - name: SummaryReport
+    description: Per-tenant prevented-incident totals, trends and MFA protection summary, last 90 days.
+    source_schema: SummaryReport
+  - name: Incident
+    description: A prevented or remediated security incident.
+    source_schema: SummaryReport.preventedIncidents.incidents[]
+relationships:
+  - from: Organization
+    to: Customer
+    type: has_many
+    via: Customer.organization
+  - from: Customer
+    to: Customer
+    type: has_many
+    via: Customer.parent_id
+    note: Customers nest; parent_id is null on the main account company.
+  - from: Customer
+    to: Integration
+    type: has_many
+    via: Customer.integrations[]
+  - from: Customer
+    to: CustomerLicenses
+    type: has_one
+    via: CustomerLicenses.customerId
+  - from: Customer
+    to: MfaReport
+    type: has_one
+    via: MfaReport.id
+  - from: Customer
+    to: PostureReport
+    type: has_one
+    via: path parameter customerId
+  - from: Customer
+    to: MicrosoftLicenseReport
+    type: has_one
+    via: path parameter customerId
+  - from: Customer
+    to: ThreatReport
+    type: has_one
+    via: path parameter customerId
+  - from: Customer
+    to: SummaryReport
+    type: has_one
+    via: path parameter customerId
+  - from: Customer
+    to: PostureTemplate
+    type: belongs_to
+    via: Customer.applied_template
+  - from: MfaReport
+    to: MfaEmployee
+    type: has_many
+    via: MfaReport.employees[]
+  - from: MfaEmployee
+    to: ConditionalAccessPolicy
+    type: has_many
+    via: mfaConfigurations.affectedByCAs[]
+  - from: PostureReport
+    to: SecurityCheck
+    type: has_many
+    via: securityChecks.* buckets
+  - from: MicrosoftLicenseReport
+    to: LicenseRenewal
+    type: has_many
+    via: renewals[]
+  - from: ThreatReport
+    to: AtRiskAccount
+    type: has_many
+    via: atRiskAccounts.{mfaStatus,mfaRegistration,inactiveAccounts}.accounts[]
+  - from: SummaryReport
+    to: Incident
+    type: has_many
+    via: preventedIncidents.incidents[]
+  - from: MfaEmployee
+    to: AtRiskAccount
+    type: has_one
+    via: userId
+    note: Cross-report join on Microsoft's userId; the only identifier shared between reports.
+notes:
+  - >-
+    There is no write surface, so nothing in this model is created, updated or deleted through the
+    API — every entity is read-only projection of state managed in the Augmentt portal.
+  - >-
+    The same at-risk account appears in up to three buckets of ThreatReport.atRiskAccounts; dedupe on
+    userId before counting.

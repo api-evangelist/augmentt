@@ -1,0 +1,353 @@
+generated: '2026-09-14'
+method: probed
+source: live probes of every host in the Augmentt record, 2026-09-14
+provider: Augmentt
+providerId: augmentt
+result: none
+summary: 'Augmentt serves no /.well-known documents on any host it operates. Nine paths were probed against
+  nine hosts (81 probes). Every 200 in this record is a catch-all: the WordPress marketing site and the
+  app, support and trust SPAs answer 200 with an HTML shell for any /.well-known/* path, which is the
+  dominant false positive on this probe and is recorded here as a miss, not a hit. The three regional
+  API hosts are AWS API Gateway and return 403 Missing Authentication Token for every path. No WellKnown,
+  SecurityTxt or AgentCard pointer is emitted from this file - a recorded absence is data, not a surface.'
+hits: 0
+html_shell_200s: 41
+hosts:
+- host: www.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/aauth-resource.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+- host: augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+  - path: /.well-known/aauth-resource.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML wordpress-404-shell, not a document - treated as a miss.
+- host: api.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/openid-configuration
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/oauth-protected-resource
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/api-catalog
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/aauth-resource.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+- host: api.eu.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/openid-configuration
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/oauth-protected-resource
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/api-catalog
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/aauth-resource.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+- host: api.apac.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/openid-configuration
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/oauth-protected-resource
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/api-catalog
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+  - path: /.well-known/aauth-resource.json
+    status: 403
+    file: null
+    note: AWS API Gateway edge response; the path is not routed.
+- host: app.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/aauth-resource.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+- host: support.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/aauth-resource.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+- host: status.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/aauth-resource.json
+    status: 404
+    file: null
+- host: trust.augmentt.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+  - path: /.well-known/aauth-resource.json
+    status: 200
+    file: null
+    note: HTTP 200 returning an HTML spa-shell, not a document - treated as a miss.
+notes:
+- No RFC 9116 security.txt. Augmentt does publish a real Responsible Disclosure Policy at https://www.augmentt.com/responsible-disclosure-policy/
+  - see security/augmentt-vulnerability-disclosure.yml. A security.txt with Policy and Contact fields
+  would make it machine-discoverable.
+- No OAuth or OpenID Connect discovery documents, consistent with the API's paired-header API-key model.
+- No A2A agent card at either /.well-known/agent-card.json or the pre-0.3 /.well-known/agent.json on any
+  host.
+- No /.well-known/api-catalog. With a published OpenAPI this would be the cheapest agent-discoverability
+  win available to Augmentt.

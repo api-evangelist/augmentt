@@ -1,0 +1,120 @@
+generated: '2026-09-14'
+method: derived
+source: openapi/augmentt-api-openapi.yml
+provider: Augmentt
+providerId: augmentt
+status: candidate
+summary: >-
+  Augmentt ships no MCP server. Searched the company site, the customer knowledge base, npm, PyPI and
+  the public MCP registries on 2026-09-14 and found nothing first-party; the GitHub account
+  github.com/Augmentt publishes no MCP repository. The tools below are a CANDIDATE set derived from
+  the twelve documented REST operations - they describe what an MCP server over this API would
+  expose, and nothing here is callable today.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  auth_note: >-
+    If built, a server would carry the same paired AccessKeyId / AccessKeySecret headers; Augmentt
+    issues no OAuth credentials.
+  verified: searched
+  searched:
+    - registry: npm
+      query: augmentt
+      result: no first-party package
+    - registry: PyPI
+      query: augmentt
+      result: 404
+    - surface: https://support.augmentt.com/kb/en
+      result: no MCP content
+    - surface: web search for an Augmentt MCP server
+      result: >-
+        No Augmentt server. Results were for unrelated projects (Softeria ms-365-mcp-server and the
+        similarly named Augment Code registry).
+agent_fit:
+  read_only: true
+  note: >-
+    This is an unusually clean MCP candidate: every operation is a side-effect-free GET, so a server
+    over it needs no write guardrails, no confirmation step and no idempotency key. The constraint is
+    response size - the all-companies roll-ups and the threat report return large unpaginated
+    documents, so a real server would need server-side summarisation or field selection.
+tools:
+  - name: list_customers
+    description: List every active managed company, with its id, name, parent, PSA email, applied posture template and connected integrations.
+    rest: [listCustomers]
+    inputSchema: { type: object, properties: {}, additionalProperties: false }
+  - name: get_customer
+    description: Get one managed company by its customerId.
+    rest: [getCustomer]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer, description: Company id from list_customers }
+      required: [customerId]
+  - name: list_customer_licenses
+    description: List Augmentt module (Secure, Engage, Discover) seat consumption for every company.
+    rest: [listCustomerLicenses]
+    inputSchema: { type: object, properties: {}, additionalProperties: false }
+  - name: get_customer_licenses
+    description: Get Augmentt module seat consumption for one company.
+    rest: [getCustomerLicenses]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer }
+      required: [customerId]
+  - name: get_mfa_report_all
+    description: Get the MFA posture roll-up across all companies - authentication methods, MFA configuration mix and protection totals.
+    rest: [getMfaReportAllCompanies]
+    inputSchema: { type: object, properties: {}, additionalProperties: false }
+  - name: get_mfa_report
+    description: Get the full MFA report for one company, including per-employee MFA status, registration and conditional access policies.
+    rest: [getMfaReport]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer }
+      required: [customerId]
+  - name: get_posture_report_all
+    description: Get the security posture roll-up across all companies - recommendation counts and configuration status.
+    rest: [getPostureReportAllCompanies]
+    inputSchema: { type: object, properties: {}, additionalProperties: false }
+  - name: get_posture_report
+    description: Get the security posture report for one company, with every security check grouped by configuration state.
+    rest: [getPostureReport]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer }
+      required: [customerId]
+  - name: get_microsoft_license_report_all
+    description: Get the Microsoft 365 licensing roll-up across all companies. Requires a Licensing Report Essentials subscription; returns an empty array otherwise.
+    rest: [getMicrosoftLicenseReportAllCompanies]
+    inputSchema: { type: object, properties: {}, additionalProperties: false }
+  - name: get_microsoft_license_report
+    description: Get the Microsoft 365 license report for one company, including renewals and per-user assignments.
+    rest: [getMicrosoftLicenseReport]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer }
+      required: [customerId]
+  - name: get_threat_report
+    description: Get the last 90 days of risk detections, risk locations, Microsoft Identity and Secure Score, and at-risk accounts for one company.
+    rest: [getThreatReport]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer }
+      required: [customerId]
+  - name: get_summary_report
+    description: Get the last 90 days of prevented incidents, MFA protection trend and prevented risky sign-ins, accounts, countries and IPs for one company.
+    rest: [getSummaryReport]
+    inputSchema:
+      type: object
+      properties:
+        customerId: { type: integer }
+      required: [customerId]
+tool_count: 12

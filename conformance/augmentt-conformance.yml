@@ -1,0 +1,120 @@
+generated: '2026-09-14'
+method: searched
+source: https://support.augmentt.com/kb/en/augmentt-api-548051
+provider: Augmentt
+providerId: augmentt
+summary: >-
+  Two different kinds of conformance apply to Augmentt and they must not be conflated. At the API
+  layer Augmentt conforms to very little — no OAuth, no OpenID Connect, no RFC 9457 problem details,
+  no standard rate-limit headers, no pagination convention. At the PRODUCT layer Augmentt is a
+  security-framework engine: its compliance audit measures every managed Microsoft 365 tenant against
+  named public control frameworks, and every posture check declares which frameworks it satisfies.
+  That product-level framework mapping is the domain-standard signature for this market, and it is
+  real, published and first-party — but it is exposed through report data, not asserted by the
+  contract itself.
+api_conformance:
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      authentication/augmentt-authentication.yml - the only scheme is a pair of custom apiKey
+      headers (AccessKeyId, AccessKeySecret). No OAuth flows are documented and no
+      /.well-known/oauth-authorization-server is served.
+  - id: oidc
+    conforms: false
+    evidence: No openid-configuration document on any Augmentt host (well-known/augmentt-well-known.yml).
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      Errors are a custom JSON envelope {"error","message"} served as application/json, not
+      application/problem+json. See errors/augmentt-problem-types.yml.
+  - id: rfc9116
+    conforms: false
+    evidence: No /.well-known/security.txt; the disclosure policy is an HTML page only.
+  - id: rfc8594
+    conforms: false
+    evidence: No Sunset or Deprecation headers and no deprecation policy (lifecycle/augmentt-lifecycle.yml).
+  - id: idempotency
+    conforms: na
+    evidence: Read-only API - twelve GET operations, no write surface to make idempotent.
+  - id: pagination
+    conforms: false
+    evidence: >-
+      No pagination of any style. Collections and all-companies roll-ups return the complete array in
+      one response.
+  - id: rate-limit-headers
+    conforms: false
+    evidence: >-
+      No RateLimit-* or X-RateLimit-* headers and no 429 documented
+      (rate-limits/augmentt-rate-limits.yml).
+  - id: openapi
+    conforms: false
+    evidence: >-
+      Augmentt publishes no machine-readable contract. The reference at
+      https://support.augmentt.com/kb/en/augmentt-api-548051 is prose and tables in a Stonly
+      knowledge base; openapi/augmentt-api-openapi.yml in this repo was transcribed from it by API
+      Evangelist and is marked x-generated-from: documentation.
+  - id: tls
+    conforms: true
+    evidence: >-
+      TLS 1.3 on www.augmentt.com; the platform security page states TLS 1.2+ with SHA256
+      certificates for all client connections. See security/augmentt-domain-security.yml.
+domain_standards:
+  note: >-
+    These are control frameworks Augmentt's Compliance Audit measures managed tenants against, and
+    which its posture checks are mapped to. They are published on the pricing page, the compliance
+    section of the customer knowledge base, and surfaced per-check in the Security Posture report.
+    They describe what the product does for its market, not a wire-format conformance of the API.
+  entries:
+    - id: cis-microsoft-365-foundations-benchmark
+      name: CIS Microsoft 365 Foundations Benchmark 2.0
+      conforms: true
+      role: framework the product audits against
+      evidence: https://support.augmentt.com/kb/en/compliance-frameworks-548050
+    - id: cisa-scuba
+      name: CISA SCuBA Secure Configuration Baselines
+      conforms: true
+      role: framework the product audits against
+      evidence: https://www.augmentt.com/pricing/
+    - id: nist-csf-2.0
+      name: NIST Cybersecurity Framework 2.0
+      conforms: true
+      role: framework the product audits against
+      evidence: https://support.augmentt.com/kb/en/compliance-frameworks-548050
+    - id: essential-eight
+      name: ACSC Essential Eight
+      conforms: true
+      role: framework the product audits against
+      evidence: https://www.augmentt.com/pricing/
+    - id: cmmc
+      name: CMMC
+      conforms: true
+      role: framework the product audits against
+      evidence: https://support.augmentt.com/kb/en/compliance-frameworks-548050
+    - id: hipaa
+      name: HIPAA
+      conforms: true
+      role: framework the product audits against
+      evidence: https://support.augmentt.com/kb/en/compliance-frameworks-548050
+    - id: maester
+      name: Maester (open-source Microsoft 365 security test framework)
+      conforms: true
+      role: external source of security posture checks, declared per check as `source`
+      evidence: https://support.augmentt.com/kb/en/augmentt-api-548051
+  api_exposure: >-
+    The Security Posture report (/v1/reports/posture and /v1/reports/posture/{customerId}) returns
+    each security check with its checkId, source, category, status, license requirement, Microsoft
+    Secure Score impact and compliance details - so an integrator can read framework coverage
+    programmatically. Framework identifiers are not, however, declared as URNs or registry
+    identifiers in the contract.
+organizational_compliance:
+  - id: soc2-type2
+    name: SOC 2 Type 2
+    conforms: true
+    evidence: https://www.augmentt.com/platform-security/
+    note: Attestation stated by Augmentt; report available on request through the Vanta trust center.
+  - id: gdpr
+    name: GDPR
+    conforms: true
+    evidence: https://www.augmentt.com/data-processing-agreement/
+    note: Published DPA and sub-processor list.
+trust_center: security/augmentt-trust-center.yml

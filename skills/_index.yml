@@ -1,0 +1,48 @@
+generated: '2026-09-14'
+method: generated
+source: openapi/augmentt-api-openapi.yml + https://support.augmentt.com/kb/en/augmentt-api-548051
+provider: Augmentt
+providerId: augmentt
+api: Augmentt API
+spec: openapi/augmentt-api-openapi.yml
+note: >-
+  Augmentt publishes no skills, AGENTS.md or agent instructions of its own - searched the site and the
+  customer knowledge base 2026-09-14. These three skills were written by API Evangelist against the
+  twelve real operationIds in openapi/augmentt-api-openapi.yml; every operationId, field name, status
+  code and constraint referenced in them appears in Augmentt's own published API reference. They
+  cover the three questions an MSP actually brings to this data.
+  All three are read-only by construction, because the API has no write surface.
+skills:
+  - name: augmentt-mfa-gap-sweep
+    file: augmentt-mfa-gap-sweep.md
+    description: >-
+      Find every user across every managed tenant who is not protected by MFA and produce a per-client
+      remediation list.
+    operations: [listCustomers, getMfaReportAllCompanies, getMfaReport]
+    write_surface: false
+  - name: augmentt-license-waste-review
+    file: augmentt-license-waste-review.md
+    description: >-
+      Reconcile Augmentt module seats against Microsoft 365 assignment and activity to surface seats a
+      client pays for and does not use.
+    operations:
+      - listCustomers
+      - listCustomerLicenses
+      - getMicrosoftLicenseReportAllCompanies
+      - getMicrosoftLicenseReport
+      - getThreatReport
+    write_surface: false
+  - name: augmentt-tenant-security-posture-brief
+    file: augmentt-tenant-security-posture-brief.md
+    description: >-
+      Produce a client-ready security brief for one tenant from posture, threat and summary reports,
+      mapped to the compliance frameworks each check satisfies.
+    operations:
+      - listCustomers
+      - getCustomer
+      - getPostureReport
+      - getPostureReportAllCompanies
+      - getThreatReport
+      - getSummaryReport
+    write_surface: false
+skill_count: 3

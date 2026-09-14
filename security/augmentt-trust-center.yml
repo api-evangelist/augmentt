@@ -1,0 +1,63 @@
+generated: '2026-09-14'
+method: searched
+source: https://trust.augmentt.com/
+provider: Augmentt
+providerId: augmentt
+published: true
+url: https://trust.augmentt.com/
+status: 200
+checked: '2026-09-14'
+platform: Vanta
+platform_detail: >-
+  Hosted Vanta Trust Center (assets.vanta.com bundle, trust-page slug 482zah1wl526fq8am8t8j). The
+  certification list and downloadable reports render client-side and, in Vanta's default
+  configuration, sit behind an access request — they could not be read anonymously, so no
+  certification inventory is claimed from this host.
+certifications:
+  - name: SOC 2 Type 2
+    status: attested
+    evidence: https://www.augmentt.com/platform-security/
+    evidence_status: 200
+    note: >-
+      Augmentt states a "SOC2 Type 2 Attestation" on its own site footer and platform security page.
+      The report itself is not public; request it through the trust center.
+  - name: GDPR
+    status: addressed
+    evidence: https://www.augmentt.com/data-processing-agreement/
+    evidence_status: 200
+    note: Published Data Processing Agreement and Sub-Processors list.
+supporting_pages:
+  - name: Platform Security
+    url: https://www.augmentt.com/platform-security/
+    status: 200
+    covers:
+      - AWS hosting, physical and environmental controls
+      - TLS 1.2+ with SHA256 certificates for all client connections
+      - 30-minute inactivity session termination
+      - Role and group based access control with a detailed event/audit log
+      - No server passwords; 2048-bit RSA key access only, keys unique per administrator
+      - Network-level firewalls
+  - name: Privacy & Security
+    url: https://www.augmentt.com/privacy-security/
+    status: 200
+  - name: Data Processing Agreement
+    url: https://www.augmentt.com/data-processing-agreement/
+    status: 200
+  - name: Sub-Processors
+    url: https://www.augmentt.com/sub-processors/
+    status: 200
+  - name: Privacy Policy
+    url: https://www.augmentt.com/privacy-policy/
+    status: 200
+  - name: Cookie Policy
+    url: https://www.augmentt.com/cookie-policy/
+    status: 200
+  - name: Responsible Disclosure Policy
+    url: https://www.augmentt.com/responsible-disclosure-policy/
+    status: 200
+  - name: Subscription Agreement
+    url: https://www.augmentt.com/subscription-agreement/
+    status: 200
+  - name: SLA
+    url: https://www.augmentt.com/augmentt-sla/
+    status: 200

@@ -1,0 +1,116 @@
+generated: '2026-09-14'
+method: searched
+source: https://support.augmentt.com/kb/en/augmentt-api-548051
+provider: Augmentt
+providerId: augmentt
+spec: openapi/augmentt-api-openapi.yml
+summary: >-
+  Augmentt publishes a read-only reporting API. Every endpoint is GET, no request body is accepted,
+  and the platform's mutating actions (reset MFA, issue a Temporary Access Pass, offboard a user,
+  push a policy) are explicitly NOT exposed. That single fact determines most of this document:
+  idempotency, reversibility and dry-run are not applicable because there is no write surface to
+  protect, reverse or rehearse.
+auth:
+  style: paired-api-key-headers
+  headers: [AccessKeyId, AccessKeySecret]
+  see: authentication/augmentt-authentication.yml
+idempotency:
+  coverage: na
+  mechanism: none
+  reason: >-
+    The public API is read-only. All twelve documented operations are GET and the documentation
+    states plainly that action endpoints are not available. There is no mutating request that could
+    be replayed, so there is no Idempotency-Key header and none is needed.
+  header: null
+  retention: null
+  write_operations: 0
+reversibility:
+  applicability: na
+  reason: >-
+    No write surface. Nothing the API can do needs taking back, so there is no cancel, refund, void,
+    undo or restore operation and no reversal window to state.
+  reversal_operations: []
+  windows: []
+dry_run:
+  supported: na
+  reason: Read-only API; every call is already side-effect free.
+pagination:
+  style: none
+  detail: >-
+    No pagination is documented. Collection endpoints (/v1/customers, /v1/customers/licenses) return
+    the full array in one response, and the all-companies report roll-ups return every active
+    company inline. No limit, offset, page, cursor or next-link parameter is described.
+  params: []
+  response_fields: []
+filtering:
+  supported: false
+  detail: >-
+    The only selector is the customerId path segment. The documentation states explicitly that the
+    API does not accept date-range parameters — threat and summary reports are fixed at the last 90
+    days, and the Microsoft license report is generated against the current day.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: false
+request_id_tracing:
+  supported: unknown
+  detail: >-
+    No correlation or request-id header is documented. The API is fronted by AWS API Gateway, which
+    commonly emits x-amzn-RequestId / x-amz-apigw-id, but Augmentt does not document either as a
+    supported client-facing trace handle.
+versioning:
+  style: uri-path
+  current: v1
+  detail: >-
+    All paths are prefixed /v1. No Accept-header or date-based version negotiation is documented, and
+    no second version has been published.
+  see: lifecycle/augmentt-lifecycle.yml
+trailing_slash:
+  tolerated: true
+  detail: Trailing slashes are accepted — /v1/reports/mfa/ behaves the same as /v1/reports/mfa.
+error_envelope:
+  shape: '{ "error": "<CODE>", "message": "<text>" }'
+  rfc9457: false
+  see: errors/augmentt-problem-types.yml
+rate_limit_signaling:
+  documented: false
+  detail: >-
+    No rate limits, quotas or throttling headers are published. Nothing in the reference names
+    X-RateLimit-*, RateLimit-* or Retry-After, and no 429 response is documented.
+  see: rate-limits/augmentt-rate-limits.yml
+regionality:
+  detail: >-
+    Three independent regional hosts — api.augmentt.com (NAM), api.eu.augmentt.com (EU),
+    api.apac.augmentt.com (APAC). A client must call the host for the region its Augmentt workspace
+    lives in; there is no global router and no documented cross-region key validity.
+naming:
+  detail: >-
+    Naming is inconsistent across resources and a client must handle both: /v1/customers returns
+    snake_case (customer_name, parent_id, psa_email, applied_template) while
+    /v1/customers/licenses and every report return camelCase (customerId, mfaStatus,
+    authenticationMethods, missingLatestMonth). The same tenant identifier is `id` on the customer
+    object, `customerId` on the licenses object and `companyId` on an MFA employee row, and it is
+    returned as an integer by /v1/customers but as a string by the MFA report.
+gotchas:
+  - >-
+    Two different things are called "licenses": /v1/reports/license is the customer's Microsoft 365
+    licensing; /v1/customers/licenses is your own Augmentt module consumption (Secure, Engage,
+    Discover).
+  - >-
+    Deactivated companies are excluded from report roll-ups and from single-company calls. Use the
+    `deactivated` property on /v1/customers to confirm a company's state before treating a 404 as an
+    error.
+  - >-
+    The Microsoft license report returns [] with HTTP 200 — not an error — when the organization is
+    not subscribed to Licensing Report Essentials.
+  - >-
+    Check missingLatestMonth and missingPreviousMonth before comparing month-over-month license
+    figures; the current month's snapshot may not be finalized.
+cross_links:
+  errors: errors/augmentt-problem-types.yml
+  lifecycle: lifecycle/augmentt-lifecycle.yml
+  authentication: authentication/augmentt-authentication.yml
+  rate_limits: rate-limits/augmentt-rate-limits.yml
+  data_model: data-model/augmentt-data-model.yml

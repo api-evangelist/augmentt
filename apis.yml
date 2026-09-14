@@ -1,184 +1,353 @@
 aid: augmentt
 name: Augmentt
-description: |
-  Augmentt is a multi-tenant SaaS management platform built for managed service providers (MSPs). It provides SaaS discovery (Shadow IT), license optimization, usage tracking, spend management, and SaaS security policy enforcement across Microsoft 365 and cloud applications. Augmentt integrates with major PSA and RMM platforms including ConnectWise and N-able.
+description: Augmentt is a Canadian software company (Kanata, Ontario) whose platform gives managed service providers
+  one place to run Microsoft 365 across every client tenant. It combines SaaS and Shadow IT discovery, Microsoft
+  365 license and spend optimization, user lifecycle automation, Intune device baselines, and a framework-mapped
+  security posture engine that measures each tenant against CIS Microsoft 365 Foundations, CISA SCuBA, NIST CSF
+  2.0, Essential Eight, CMMC and HIPAA. It integrates with the PSA and RMM tools MSPs already run, including ConnectWise
+  and N-able, and is distributed through the Pax8 marketplace. Augmentt publishes a read-only reporting API - twelve
+  GET endpoints across three regional hosts - that lets partners pull customer, license, MFA, posture, threat and
+  summary report data into their own BI, PSA or billing systems.
 type: Index
 deliveryModel:
   model: saas
   open_source: false
   commercial: true
-  callable_host: false
+  callable_host: true
   label: Hosted service · you call their endpoint
-  confidence: medium
+  confidence: high
   source:
   - pricing
-  generated: '2026-08-28'
-  method: derived
+  - openapi
+  - docs
+  generated: '2026-09-14'
+  method: searched
+  note: Augmentt runs three regional API hosts (api.augmentt.com, api.eu.augmentt.com, api.apac.augmentt.com) serving
+    a documented read-only /v1 surface. Access is an entitlement enabled per organization for partners on Autopilot,
+    not self-serve.
 accessModel:
   pricing: freemium
-  onboarding: unknown
-  trial: false
+  onboarding: sales-assisted
+  trial: true
   try_now: false
   public: false
   label: Freemium
   confidence: medium
   source:
-  - plans
-  generated: '2026-07-22'
-  method: derived
+  - pricing
+  - docs
+  generated: '2026-09-14'
+  method: searched
+  note: Free trial for the platform; API keys are issued by Augmentt support on request and API access is enabled
+    per organization. No published API prices.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
 tags:
-  - MSP
-  - Microsoft-365
-  - SaaS Management
-  - SaaS Security
-  - Shadow IT
+- MSP
+- Microsoft-365
+- SaaS Management
+- SaaS Security
+- Shadow IT
+- Security Posture
+- Compliance
+- License Management
+- Multi-Tenant
+- Reporting
 tags_raw:
-  - MSP
-  - Microsoft 365
-  - SaaS Management
-  - SaaS Security
-  - Shadow IT
-url: >-
-  https://raw.githubusercontent.com/api-evangelist/augmentt/refs/heads/main/apis.yml
+- MSP
+- Microsoft 365
+- SaaS Management
+- SaaS Security
+- Shadow IT
+- Security Posture
+- Compliance
+- License Management
+- Multi-Tenant
+- Reporting
+url: https://raw.githubusercontent.com/api-evangelist/augmentt/refs/heads/main/apis.yml
 created: '2026-03-27'
-modified: '2026-04-19'
+modified: '2026-09-14'
 specificationVersion: '0.23'
 apis:
-  - aid: augmentt:augmentt-discover
-    name: Augmentt Discover
-    description: |
-      Augmentt Discover provides SaaS discovery and Shadow IT detection capabilities for MSPs, identifying all cloud applications used across managed client environments.
-    humanURL: https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/
-    baseURL: https://www.augmentt.com
-    tags:
-    - Discovery
-    - MSP
-    - Software-as-a-Service
-    - Shadow IT
-    tags_raw:
-    - Discovery
-    - MSP
-    - SaaS
-    - Shadow IT
-    properties:
-    - type: Documentation
-      url: https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/
-  - aid: augmentt:augmentt-optimize
-    name: Augmentt Optimize
-    description: |
-      Augmentt Optimize tracks SaaS usage and spend across client environments to identify unused licenses, redundant applications, and cost savings opportunities for MSPs.
-    humanURL: https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/
-    baseURL: https://www.augmentt.com
-    tags:
-    - License Management
-    - MSP
-    - Software-as-a-Service
-    - Spend Management
-    tags_raw:
-    - License Management
-    - MSP
-    - SaaS
-    - Spend Management
-    properties:
-    - type: Documentation
-      url: https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/
-  - aid: augmentt:augmentt-engage
-    name: Augmentt Engage
-    description: |
-      Augmentt Engage provides SaaS administration, management, and automation capabilities allowing MSPs to centralize SaaS security policy enforcement and user lifecycle management across Microsoft 365 and cloud apps.
-    humanURL: https://www.augmentt.com/user-management/
-    baseURL: https://www.augmentt.com
-    tags:
-    - Automation
-    - MSP
-    - SaaS Security
-    - User Management
-    properties:
-    - type: Documentation
-      url: https://www.augmentt.com/user-management/
-common:
-  - type: VulnerabilityDisclosure
-    url: security/augmentt-vulnerability-disclosure.yml
-  - type: DomainSecurity
-    url: security/augmentt-domain-security.yml
-  - type: GitHubOrganization
-    url: https://github.com/Augmentt
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/augmentt
-  - type: Website
-    url: https://www.augmentt.com
+- aid: augmentt:augmentt-api
+  name: Augmentt API
+  description: 'The Augmentt API is a read-only reporting interface over the Augmentt platform. Twelve GET endpoints
+    expose the managed customer list, Augmentt module seat consumption, Microsoft 365 licensing, and the MFA, security
+    posture, threat and summary reports that back the Augmentt portal - so an MSP can pull the data behind its reports
+    into BI dashboards, PSA sync or partner tools such as Cork and Gradient. Authentication is a paired AccessKeyId
+    / AccessKeySecret header set issued by Augmentt support; the API is enabled per organization for partners on
+    Autopilot. It performs no actions: MFA resets, Temporary Access Passes and offboarding are portal-only.'
+  humanURL: https://support.augmentt.com/kb/en/augmentt-api-548051
+  baseURL: https://api.augmentt.com
+  tags:
+  - Reporting
+  - MSP
+  - Microsoft-365
+  - Security Posture
+  - License Management
+  - Multi-Tenant
+  tags_raw:
+  - Reporting
+  - MSP
+  - Microsoft 365
+  - Security Posture
+  - License Management
+  - Multi-Tenant
+  properties:
+  - type: OpenAPI
+    url: openapi/augmentt-api-openapi.yml
+  - type: Overlay
+    url: overlays/augmentt-api-overlay.yaml
+  - type: APIReference
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
   - type: Documentation
-    url: https://www.augmentt.com/resources
-  - type: Integrations
-    data:
-    - name: ConnectWise
-      description: Native integration with ConnectWise PSA for automated ticketing and billing based on SaaS discovery and license data.
-    - name: N-able
-      description: Integration with N-able RMM for combined endpoint and SaaS management visibility for MSPs.
-    - name: Microsoft 365
-      description: Deep integration with Microsoft 365 tenant data for SaaS license, usage, and security policy management.
-    - name: CloudRadial
-      description: Augmentt data surfaced in CloudRadial customer portal for self-service SaaS app visibility.
-  - type: Features
-    data:
-    - name: Multi-Tenant Management
-      description: Manage SaaS applications across multiple client tenants from a single MSP dashboard with hierarchical access control.
-    - name: SaaS Discovery
-      description: Automatically discover all cloud applications in use across client environments including Shadow IT not approved by IT.
-    - name: License Optimization
-      description: Track license utilization, identify unused seats, and generate recommendations to reduce SaaS spend across clients.
-    - name: SaaS Security Policies
-      description: Enforce security policies across SaaS applications including MFA requirements, conditional access, and app permissions.
-    - name: User Lifecycle Management
-      description: Automate user onboarding and offboarding across SaaS applications when employees join or leave client organizations.
-    - name: PSA Integration
-      description: Integrate discovery and optimization data with PSA platforms for automated billing and service delivery.
-  - type: UseCases
-    data:
-    - name: SaaS Spend Management
-      description: Identify and eliminate wasted SaaS spend by discovering unused licenses and redundant applications across client portfolios.
-    - name: Shadow IT Control
-      description: Detect and manage unsanctioned cloud applications to reduce security risk and enforce acceptable use policies.
-    - name: Microsoft 365 Management
-      description: Manage M365 licenses, security settings, and user access across all client tenants from a unified MSP console.
-    - name: Employee Offboarding
-      description: Automate secure offboarding of departing employees by revoking access to all SaaS applications simultaneously.
-  - type: Solutions
-    data:
-    - name: MSP SaaS Management Service
-      description: Package and deliver SaaS management as a managed service offering including discovery, optimization, and security monitoring.
-    - name: Microsoft 365 Security
-      description: Extend M365 security posture management with SaaS-specific controls, policy enforcement, and compliance reporting.
-  - type: PrivacyPolicy
-    url: https://www.augmentt.com/privacy-policy/
-  - type: TermsOfService
-    url: https://www.augmentt.com/terms-of-service/
-  - type: Contact
-    url: https://www.augmentt.com/contact/
-  - type: Blog
-    url: https://www.augmentt.com/blog/
-  - type: Signup
-    url: https://www.augmentt.com/free-trial/
-  - type: Pricing
-    url: https://www.augmentt.com/pricing/
-  - type: Integrations
-    url: https://www.augmentt.com/integrations/
-  - type: LlmsText
-    url: https://augmentt.com/llms.txt
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
+  - type: GettingStarted
+    url: https://support.augmentt.com/kb/guide/en/augmentt-api-PxWM1gKflk/Steps/5908721
+  - type: Authentication
+    url: authentication/augmentt-authentication.yml
+  - type: ErrorCatalog
+    url: errors/augmentt-problem-types.yml
+  - type: DataModel
+    url: data-model/augmentt-data-model.yml
+  - type: Conventions
+    url: conventions/augmentt-conventions.yml
+  - type: RateLimits
+    url: rate-limits/augmentt-rate-limits.yml
+  - type: MCPServer
+    url: mcp/augmentt-mcp.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  x-evidence:
+    verified: '2026-09-14'
+    method: fetched the provider API reference and probed the API host
+    docs: https://support.augmentt.com/kb/en/augmentt-api-548051
+    docs_status: 200
+    docs_describes: 12 GET endpoints, 3 regional base URLs, paired API-key headers, response-code table, per-endpoint
+      property tables and example responses
+    endpoint_check: GET https://api.augmentt.com/ returned 403 {"message":"Missing Authentication Token"}; GET /v1/openapi.json
+      returned 404 {"message":"The requested API endpoint is invalid..."} - an AWS API Gateway serving the documented
+      /v1 routes
+    spec_published_by_provider: false
+    spec_note: 'openapi/augmentt-api-openapi.yml was transcribed by API Evangelist from the provider reference and
+      carries x-generated-from: documentation. Augmentt publishes no machine-readable contract.'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+- aid: augmentt:augmentt-discover
+  name: Augmentt Discover
+  description: 'Augmentt Discover provides SaaS discovery and Shadow IT detection capabilities for MSPs, identifying
+    all cloud applications used across managed client environments.
+
+    '
+  humanURL: https://www.augmentt.com/saas-discovery/
+  baseURL: https://api.augmentt.com
+  tags:
+  - Discovery
+  - MSP
+  - Software-as-a-Service
+  - Shadow IT
+  tags_raw:
+  - Discovery
+  - MSP
+  - SaaS
+  - Shadow IT
+  properties:
+  - type: Documentation
+    url: https://www.augmentt.com/saas-discovery/
+  x-note: Product module. Its own data surface is limited to Discover seat consumption via the Augmentt API (/v1/customers/licenses);
+    it has no separate API host.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+- aid: augmentt:augmentt-optimize
+  name: Augmentt Optimize
+  description: 'Augmentt Optimize tracks SaaS usage and spend across client environments to identify unused licenses,
+    redundant applications, and cost savings opportunities for MSPs.
+
+    '
+  humanURL: https://www.augmentt.com/microsoft-licensing/
+  baseURL: https://api.augmentt.com
+  tags:
+  - License Management
+  - MSP
+  - Software-as-a-Service
+  - Spend Management
+  tags_raw:
+  - License Management
+  - MSP
+  - SaaS
+  - Spend Management
+  properties:
+  - type: Documentation
+    url: https://www.augmentt.com/microsoft-licensing/
+  x-note: Product module. Microsoft 365 license data is read through the Augmentt API (/v1/reports/license), gated
+    behind a Licensing Report Essentials subscription; it has no separate API host.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+- aid: augmentt:augmentt-engage
+  name: Augmentt Engage
+  description: 'Augmentt Engage provides SaaS administration, management, and automation capabilities allowing MSPs
+    to centralize SaaS security policy enforcement and user lifecycle management across Microsoft 365 and cloud
+    apps.
+
+    '
+  humanURL: https://www.augmentt.com/user-management/
+  baseURL: https://api.augmentt.com
+  tags:
+  - Automation
+  - MSP
+  - SaaS Security
+  - User Management
+  properties:
+  - type: Documentation
+    url: https://www.augmentt.com/user-management/
+  x-note: Product module. The Augmentt API is read-only and exposes no Engage actions - user management, password
+    reset and offboarding are portal-only. Only Engage seat consumption is readable, via /v1/customers/licenses.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+common:
+- type: VulnerabilityDisclosure
+  url: security/augmentt-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/augmentt-domain-security.yml
+- type: GitHubOrganization
+  url: https://github.com/Augmentt
+- type: LinkedIn
+  url: https://www.linkedin.com/company/augmentt
+- type: Website
+  url: https://www.augmentt.com
+- type: Integrations
+  data:
+  - name: ConnectWise
+    description: Native integration with ConnectWise PSA for automated ticketing and billing based on SaaS discovery
+      and license data.
+  - name: N-able
+    description: Integration with N-able RMM for combined endpoint and SaaS management visibility for MSPs.
+  - name: Microsoft 365
+    description: Deep integration with Microsoft 365 tenant data for SaaS license, usage, and security policy management.
+  - name: CloudRadial
+    description: Augmentt data surfaced in CloudRadial customer portal for self-service SaaS app visibility.
+- type: Features
+  data:
+  - name: Multi-Tenant Management
+    description: Manage SaaS applications across multiple client tenants from a single MSP dashboard with hierarchical
+      access control.
+  - name: SaaS Discovery
+    description: Automatically discover all cloud applications in use across client environments including Shadow
+      IT not approved by IT.
+  - name: License Optimization
+    description: Track license utilization, identify unused seats, and generate recommendations to reduce SaaS spend
+      across clients.
+  - name: SaaS Security Policies
+    description: Enforce security policies across SaaS applications including MFA requirements, conditional access,
+      and app permissions.
+  - name: User Lifecycle Management
+    description: Automate user onboarding and offboarding across SaaS applications when employees join or leave
+      client organizations.
+  - name: PSA Integration
+    description: Integrate discovery and optimization data with PSA platforms for automated billing and service
+      delivery.
+- type: UseCases
+  data:
+  - name: SaaS Spend Management
+    description: Identify and eliminate wasted SaaS spend by discovering unused licenses and redundant applications
+      across client portfolios.
+  - name: Shadow IT Control
+    description: Detect and manage unsanctioned cloud applications to reduce security risk and enforce acceptable
+      use policies.
+  - name: Microsoft 365 Management
+    description: Manage M365 licenses, security settings, and user access across all client tenants from a unified
+      MSP console.
+  - name: Employee Offboarding
+    description: Automate secure offboarding of departing employees by revoking access to all SaaS applications
+      simultaneously.
+- type: Solutions
+  data:
+  - name: MSP SaaS Management Service
+    description: Package and deliver SaaS management as a managed service offering including discovery, optimization,
+      and security monitoring.
+  - name: Microsoft 365 Security
+    description: Extend M365 security posture management with SaaS-specific controls, policy enforcement, and compliance
+      reporting.
+- type: PrivacyPolicy
+  url: https://www.augmentt.com/privacy-policy/
+- type: Contact
+  url: https://www.augmentt.com/contact/
+- type: Blog
+  url: https://www.augmentt.com/blog/
+- type: Pricing
+  url: https://www.augmentt.com/pricing/
+- type: Integrations
+  url: https://www.augmentt.com/integrations/
+- type: Documentation
+  url: https://support.augmentt.com/kb/en
+- type: DeveloperPortal
+  url: https://support.augmentt.com/kb/en/augmentt-api-548051
+- type: APIReference
+  url: https://support.augmentt.com/kb/en/augmentt-api-548051
+- type: GettingStarted
+  url: https://support.augmentt.com/kb/en/getting-started-548027
+- type: Support
+  url: https://support.augmentt.com/kb/en/submit-a-support-ticket-377576
+- type: TermsOfService
+  url: https://www.augmentt.com/subscription-agreement/
+- type: SignUp
+  url: https://www.augmentt.com/free-sign-up/
+- type: Roadmap
+  url: https://www.augmentt.com/product-roadmap/
+- type: StatusPage
+  url: https://status.augmentt.com/
+- type: Lifecycle
+  url: lifecycle/augmentt-lifecycle.yml
+- type: ChangeLog
+  url: https://www.augmentt.com/blog/category/product/
+- type: Security
+  url: https://www.augmentt.com/responsible-disclosure-policy/
+- type: TrustCenter
+  url: https://trust.augmentt.com/
+- type: Compliance
+  url: security/augmentt-trust-center.yml
+- type: Conformance
+  url: conformance/augmentt-conformance.yml
+- type: Authentication
+  url: authentication/augmentt-authentication.yml
+- type: ErrorCatalog
+  url: errors/augmentt-problem-types.yml
+- type: Conventions
+  url: conventions/augmentt-conventions.yml
+- type: DataModel
+  url: data-model/augmentt-data-model.yml
+- type: Packages
+  url: packages/augmentt-packages.yml
+- type: RateLimits
+  url: rate-limits/augmentt-rate-limits.yml
+- type: Plans
+  url: plans/augmentt-plans-pricing.yml
+- type: Overlay
+  url: overlays/augmentt-api-overlay.yaml
+- type: MCPServer
+  url: mcp/augmentt-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: https://augmentt.com/llms.txt
+- type: Careers
+  url: https://www.augmentt.com/careers/
+- type: Newsroom
+  url: https://www.augmentt.com/newsroom/
 integrations:
-  - name: Tile-Icon-2-1-1 12
-  - name: Tile-Icon-2-1-1 11
-  - name: Tile-Icon-2-1-1 10
-  - name: Tile-Icon-2-1-1 9
-  - name: Tile-Icon-2-1-1 8
-  - name: Tile-Icon-2-1-1 7
-  - name: Tile-Icon-2-1-1 6
-  - name: Tile-Icon-2-1-1 5
-  - name: Tile-Icon-2-1-1 4
-  - name: Tile-Icon-2-1-1 3
-  - name: Tile-Icon-2-1-1 2
-  - name: Tile-Icon-2-1-1 1
+- name: Tile-Icon-2-1-1 12
+- name: Tile-Icon-2-1-1 11
+- name: Tile-Icon-2-1-1 10
+- name: Tile-Icon-2-1-1 9
+- name: Tile-Icon-2-1-1 8
+- name: Tile-Icon-2-1-1 7
+- name: Tile-Icon-2-1-1 6
+- name: Tile-Icon-2-1-1 5
+- name: Tile-Icon-2-1-1 4
+- name: Tile-Icon-2-1-1 3
+- name: Tile-Icon-2-1-1 2
+- name: Tile-Icon-2-1-1 1
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+position: Producing
+x-enrichment:
+  date: '2026-09-14'
+  status: enriched
+  artifacts_added: 17
+  pass: local-v3

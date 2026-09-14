@@ -3,100 +3,57 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Augmentt
 providerId: augmentt
+generated: '2026-09-14'
+method: searched
+source: https://support.augmentt.com/kb/en/augmentt-api-548051
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-14'
+# 2026-09-14: this file previously held a bulk-sweep SCAFFOLD asserting X-RateLimit-* headers, 429
+# responses and free/professional/enterprise tiers of 10/100/1000 rpm. Augmentt publishes none of
+# that. The scaffold has been replaced with the measured absence.
 tags:
   - MSP
   - Microsoft 365
   - SaaS Management
-  - SaaS Security
-  - Shadow IT
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Augmentt API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
-headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+description: >-
+  Augmentt publishes no rate limits for its API. The full API reference — availability, key issuance,
+  authentication, the endpoint table, the response-code table and the troubleshooting FAQ — names no
+  quota, no per-minute or per-day ceiling, no burst allowance, no 429 status and no rate-limit
+  response header. An integrator cannot tell from the documentation how often they may poll.
+limit_count: 0
+headers_documented: false
+headers: {}
 responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Augmentt Discover
-      - Augmentt Optimize
-      - Augmentt Engage
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Augmentt Discover
-      - Augmentt Optimize
-      - Augmentt Engage
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Augmentt Discover
-      - Augmentt Optimize
-      - Augmentt Engage
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Augmentt Discover
-      - Augmentt Optimize
-      - Augmentt Engage
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Augmentt Discover
-      - Augmentt Optimize
-      - Augmentt Engage
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  throttled: null
+  documented_statuses: [200, 400, 401, 403, 404, 500]
+limits: []
+policies: []
+findings:
+  - >-
+    No 429 appears in the documented response-code table. The only documented failure statuses are
+    400, 401, 403, 404 and 500.
+  - >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented anywhere in the reference.
+  - >-
+    The API is fronted by AWS API Gateway (an anonymous GET to https://api.augmentt.com/ returns
+    {"message":"Missing Authentication Token"}, observed 2026-09-14), which carries account-level
+    throttling defaults. Augmentt does not publish what those are set to, so nothing can be asserted
+    about the effective ceiling.
+  - >-
+    Because every endpoint is a full-report GET with no pagination and no date filtering, polling
+    cost is driven by tenant count and report size rather than by a published call budget.
+recommendation_to_provider: >-
+  Publish the per-key call ceiling and emit RateLimit-Limit / RateLimit-Remaining / RateLimit-Reset
+  (RFC 9331 style) plus Retry-After on exhaustion. An agent or a scheduled BI sync currently has no
+  runtime signal to back off against.
+evidence:
+  - url: https://support.augmentt.com/kb/en/augmentt-api-548051
+    status: 200
+    note: Full API reference read 2026-09-14; no rate-limit content present.
+  - url: https://api.augmentt.com/
+    status: 403
+    note: Anonymous probe; AWS API Gateway edge response, no rate-limit headers returned.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
