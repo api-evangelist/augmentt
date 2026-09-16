@@ -68,35 +68,84 @@ created: '2026-03-27'
 modified: '2026-09-14'
 specificationVersion: '0.23'
 apis:
-- aid: augmentt:augmentt-api
-  name: Augmentt API
-  description: 'The Augmentt API is a read-only reporting interface over the Augmentt platform. Twelve GET endpoints
-    expose the managed customer list, Augmentt module seat consumption, Microsoft 365 licensing, and the MFA, security
-    posture, threat and summary reports that back the Augmentt portal - so an MSP can pull the data behind its reports
-    into BI dashboards, PSA sync or partner tools such as Cork and Gradient. Authentication is a paired AccessKeyId
-    / AccessKeySecret header set issued by Augmentt support; the API is enabled per organization for partners on
-    Autopilot. It performs no actions: MFA resets, Temporary Access Passes and offboarding are portal-only.'
+- aid: augmentt:augmentt-discover
+  name: Augmentt Discover
+  description: >
+    Augmentt Discover provides SaaS discovery and Shadow IT detection capabilities for MSPs, identifying
+    all cloud applications used across managed client environments.
+  humanURL: https://www.augmentt.com/saas-discovery/
+  baseURL: https://api.augmentt.com
+  tags:
+  - Discovery
+  - MSP
+  - Software-as-a-Service
+  - Shadow IT
+  tags_raw:
+  - Discovery
+  - MSP
+  - SaaS
+  - Shadow IT
+  properties:
+  - type: Documentation
+    url: https://www.augmentt.com/saas-discovery/
+  x-note: >-
+    Product module. Its own data surface is limited to Discover seat consumption via the Augmentt API
+    (/v1/customers/licenses); it has no separate API host.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+- aid: augmentt:augmentt-optimize
+  name: Augmentt Optimize
+  description: >
+    Augmentt Optimize tracks SaaS usage and spend across client environments to identify unused licenses,
+    redundant applications, and cost savings opportunities for MSPs.
+  humanURL: https://www.augmentt.com/microsoft-licensing/
+  baseURL: https://api.augmentt.com
+  tags:
+  - License Management
+  - MSP
+  - Software-as-a-Service
+  - Spend Management
+  tags_raw:
+  - License Management
+  - MSP
+  - SaaS
+  - Spend Management
+  properties:
+  - type: Documentation
+    url: https://www.augmentt.com/microsoft-licensing/
+  x-note: >-
+    Product module. Microsoft 365 license data is read through the Augmentt API (/v1/reports/license),
+    gated behind a Licensing Report Essentials subscription; it has no separate API host.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+- aid: augmentt:augmentt-engage
+  name: Augmentt Engage
+  description: >
+    Augmentt Engage provides SaaS administration, management, and automation capabilities allowing MSPs
+    to centralize SaaS security policy enforcement and user lifecycle management across Microsoft 365
+    and cloud apps.
+  humanURL: https://www.augmentt.com/user-management/
+  baseURL: https://api.augmentt.com
+  tags:
+  - Automation
+  - MSP
+  - SaaS Security
+  - User Management
+  properties:
+  - type: Documentation
+    url: https://www.augmentt.com/user-management/
+  x-note: >-
+    Product module. The Augmentt API is read-only and exposes no Engage actions - user management, password
+    reset and offboarding are portal-only. Only Engage seat consumption is readable, via /v1/customers/licenses.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+- aid: augmentt:augmentt-customers-api
+  name: Augmentt Customers API
+  description: Companies (tenants) configured under Configuration > Companies in the Augmentt portal.
   humanURL: https://support.augmentt.com/kb/en/augmentt-api-548051
   baseURL: https://api.augmentt.com
   tags:
-  - Reporting
-  - MSP
-  - Microsoft-365
-  - Security Posture
-  - License Management
-  - Multi-Tenant
-  tags_raw:
-  - Reporting
-  - MSP
-  - Microsoft 365
-  - Security Posture
-  - License Management
-  - Multi-Tenant
+  - Customers
   properties:
   - type: OpenAPI
-    url: openapi/augmentt-api-openapi.yml
-  - type: Overlay
-    url: overlays/augmentt-api-overlay.yaml
+    url: openapi/augmentt-customers-api-openapi.yml
   - type: APIReference
     url: https://support.augmentt.com/kb/en/augmentt-api-548051
   - type: Documentation
@@ -113,92 +162,58 @@ apis:
     url: conventions/augmentt-conventions.yml
   - type: RateLimits
     url: rate-limits/augmentt-rate-limits.yml
-  - type: MCPServer
-    url: mcp/augmentt-mcp.yml
-  - type: AgentSkill
-    url: skills/_index.yml
-  x-evidence:
-    verified: '2026-09-14'
-    method: fetched the provider API reference and probed the API host
-    docs: https://support.augmentt.com/kb/en/augmentt-api-548051
-    docs_status: 200
-    docs_describes: 12 GET endpoints, 3 regional base URLs, paired API-key headers, response-code table, per-endpoint
-      property tables and example responses
-    endpoint_check: GET https://api.augmentt.com/ returned 403 {"message":"Missing Authentication Token"}; GET /v1/openapi.json
-      returned 404 {"message":"The requested API endpoint is invalid..."} - an AWS API Gateway serving the documented
-      /v1 routes
-    spec_published_by_provider: false
-    spec_note: 'openapi/augmentt-api-openapi.yml was transcribed by API Evangelist from the provider reference and
-      carries x-generated-from: documentation. Augmentt publishes no machine-readable contract.'
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
-- aid: augmentt:augmentt-discover
-  name: Augmentt Discover
-  description: 'Augmentt Discover provides SaaS discovery and Shadow IT detection capabilities for MSPs, identifying
-    all cloud applications used across managed client environments.
-
-    '
-  humanURL: https://www.augmentt.com/saas-discovery/
+- aid: augmentt:augmentt-licensing-api
+  name: Augmentt Licensing API
+  description: Augmentt module license consumption and Microsoft 365 licensing reports.
+  humanURL: https://support.augmentt.com/kb/en/augmentt-api-548051
   baseURL: https://api.augmentt.com
   tags:
-  - Discovery
-  - MSP
-  - Software-as-a-Service
-  - Shadow IT
-  tags_raw:
-  - Discovery
-  - MSP
-  - SaaS
-  - Shadow IT
+  - Licensing
   properties:
+  - type: OpenAPI
+    url: openapi/augmentt-licensing-api-openapi.yml
+  - type: APIReference
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
   - type: Documentation
-    url: https://www.augmentt.com/saas-discovery/
-  x-note: Product module. Its own data surface is limited to Discover seat consumption via the Augmentt API (/v1/customers/licenses);
-    it has no separate API host.
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
-- aid: augmentt:augmentt-optimize
-  name: Augmentt Optimize
-  description: 'Augmentt Optimize tracks SaaS usage and spend across client environments to identify unused licenses,
-    redundant applications, and cost savings opportunities for MSPs.
-
-    '
-  humanURL: https://www.augmentt.com/microsoft-licensing/
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
+  - type: GettingStarted
+    url: https://support.augmentt.com/kb/guide/en/augmentt-api-PxWM1gKflk/Steps/5908721
+  - type: Authentication
+    url: authentication/augmentt-authentication.yml
+  - type: ErrorCatalog
+    url: errors/augmentt-problem-types.yml
+  - type: DataModel
+    url: data-model/augmentt-data-model.yml
+  - type: Conventions
+    url: conventions/augmentt-conventions.yml
+  - type: RateLimits
+    url: rate-limits/augmentt-rate-limits.yml
+- aid: augmentt:augmentt-security-reports-api
+  name: Augmentt Security Reports API
+  description: MFA, security posture, threat and summary reporting for managed tenants.
+  humanURL: https://support.augmentt.com/kb/en/augmentt-api-548051
   baseURL: https://api.augmentt.com
   tags:
-  - License Management
-  - MSP
-  - Software-as-a-Service
-  - Spend Management
-  tags_raw:
-  - License Management
-  - MSP
-  - SaaS
-  - Spend Management
+  - Security Reports
   properties:
+  - type: OpenAPI
+    url: openapi/augmentt-security-reports-api-openapi.yml
+  - type: APIReference
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
   - type: Documentation
-    url: https://www.augmentt.com/microsoft-licensing/
-  x-note: Product module. Microsoft 365 license data is read through the Augmentt API (/v1/reports/license), gated
-    behind a Licensing Report Essentials subscription; it has no separate API host.
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
-- aid: augmentt:augmentt-engage
-  name: Augmentt Engage
-  description: 'Augmentt Engage provides SaaS administration, management, and automation capabilities allowing MSPs
-    to centralize SaaS security policy enforcement and user lifecycle management across Microsoft 365 and cloud
-    apps.
-
-    '
-  humanURL: https://www.augmentt.com/user-management/
-  baseURL: https://api.augmentt.com
-  tags:
-  - Automation
-  - MSP
-  - SaaS Security
-  - User Management
-  properties:
-  - type: Documentation
-    url: https://www.augmentt.com/user-management/
-  x-note: Product module. The Augmentt API is read-only and exposes no Engage actions - user management, password
-    reset and offboarding are portal-only. Only Engage seat consumption is readable, via /v1/customers/licenses.
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
+  - type: GettingStarted
+    url: https://support.augmentt.com/kb/guide/en/augmentt-api-PxWM1gKflk/Steps/5908721
+  - type: Authentication
+    url: authentication/augmentt-authentication.yml
+  - type: ErrorCatalog
+    url: errors/augmentt-problem-types.yml
+  - type: DataModel
+    url: data-model/augmentt-data-model.yml
+  - type: Conventions
+    url: conventions/augmentt-conventions.yml
+  - type: RateLimits
+    url: rate-limits/augmentt-rate-limits.yml
 common:
 - type: VulnerabilityDisclosure
   url: security/augmentt-vulnerability-disclosure.yml
