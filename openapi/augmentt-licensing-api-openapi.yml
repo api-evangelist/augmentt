@@ -1,0 +1,412 @@
+openapi: 3.2.0
+info:
+  title: Augmentt Licensing API
+  version: '1.0'
+  summary: Read-only reporting API for the Augmentt Microsoft 365 management platform for MSPs.
+  description: The Augmentt API lets an MSP pull the data behind Augmentt's reports — customers, Augmentt module license consumption, MFA, security posture, Microsoft 365 licensing, threat and summary reports — into their own systems.
+  contact:
+    name: Augmentt Support
+    email: support@augmentt.com
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
+  termsOfService: https://www.augmentt.com/subscription-agreement/
+servers:
+- url: https://api.augmentt.com
+  description: North America (NAM)
+- url: https://api.eu.augmentt.com
+  description: Europe (EU)
+- url: https://api.apac.augmentt.com
+  description: Asia Pacific (APAC)
+security:
+- AccessKeyId: []
+  AccessKeySecret: []
+tags:
+- name: Licensing
+  description: Augmentt module license consumption and Microsoft 365 licensing reports.
+paths:
+  /v1/customers/licenses:
+    get:
+      operationId: listCustomerLicenses
+      summary: List Augmentt module license consumption for all customers
+      description: Returns Augmentt product license consumption per customer, as shown under Management > License Center in the Augmentt portal — the Secure, Engage and Discover seat counts you are billed for. This is NOT Microsoft 365 licensing; for that use `getMicrosoftLicenseReportAllCompanies`.
+      tags:
+      - Licensing
+      responses:
+        '200':
+          description: A collection of per-customer Augmentt module license objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerLicenses'
+              examples:
+                allCustomerLicenses:
+                  summary: List all customers (verbatim from the Augmentt API reference)
+                  value:
+                  - customerId: 123
+                    licenses:
+                    - type: discover
+                      count: 31
+                    - type: engage
+                      count: 31
+                    - type: secure
+                      count: 31
+                  - customerId: 124
+                    licenses:
+                    - type: discover
+                      count: 76
+                    - type: engage
+                      count: 76
+                    - type: secure
+                      count: 76
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/customers/{customerId}/licenses:
+    get:
+      operationId: getCustomerLicenses
+      summary: Get Augmentt module license consumption for one customer
+      description: Returns the Augmentt module (Secure, Engage, Discover) seat consumption for a single company.
+      tags:
+      - Licensing
+      parameters:
+      - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: A single-element collection holding the customer's Augmentt module licenses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerLicenses'
+              examples:
+                singleCustomerLicenses:
+                  summary: List a single customer (verbatim from the Augmentt API reference)
+                  value:
+                  - customerId: 123
+                    licenses:
+                    - type: discover
+                      count: 31
+                    - type: engage
+                      count: 31
+                    - type: secure
+                      count: 31
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/reports/license:
+    get:
+      operationId: getMicrosoftLicenseReportAllCompanies
+      summary: Get the Microsoft 365 license report rolled up across all companies
+      description: Returns the Microsoft 365 License Report roll-up — license types, month-over-month trends, an active/assigned overview, and a per-company breakdown. Requires a Licensing Report Essentials subscription; organizations without it receive an empty array with HTTP 200 rather than an error. The report is generated against the current day, so check `missingLatestMonth` and `missingPreviousMonth` before comparing months.
+      tags:
+      - Licensing
+      responses:
+        '200':
+          description: The Microsoft license roll-up, or an empty array when the organization is not licensed for Licensing Report Essentials.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/MicrosoftLicenseReportAllCompanies'
+                - type: array
+                  maxItems: 0
+                  description: Empty array returned when Licensing Report Essentials is not enabled.
+                  items: {}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/reports/license/{customerId}:
+    get:
+      operationId: getMicrosoftLicenseReport
+      summary: Get the Microsoft 365 license report for one company
+      description: Returns the Microsoft 365 License Report for a single tenant — license types and counts, monthly trends, subscription renewal dates and commitments, an active/assigned overview, and per-user assignments and changes. Requires a Licensing Report Essentials subscription; organizations without it receive an empty array with HTTP 200.
+      tags:
+      - Licensing
+      parameters:
+      - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: The Microsoft license report for the requested company, or an empty array when Licensing Report Essentials is not enabled.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/MicrosoftLicenseReport'
+                - type: array
+                  maxItems: 0
+                  description: Empty array returned when Licensing Report Essentials is not enabled.
+                  items: {}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    LicenseType:
+      type: object
+      properties:
+        planName:
+          type: string
+          description: Name of the Microsoft license
+        count:
+          type: integer
+          description: Count of active licenses
+    LicenseTrend:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Last day of the month used as a delta indicator
+        enabledCount:
+          type: integer
+          description: Count of enabled licenses
+        assignedCount:
+          type: integer
+          description: Count of assigned licenses
+    MicrosoftLicenseReport:
+      type: object
+      description: Microsoft 365 License Report for a single tenant.
+      properties:
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseType'
+        trends:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseTrend'
+        renewals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseRenewal'
+        overview:
+          $ref: '#/components/schemas/LicenseOverview'
+        users:
+          type: array
+          description: Users with their license assignments and changes.
+          items:
+            type: object
+        missingLatestMonth:
+          type: boolean
+          description: True when the current month's snapshot is not yet finalized. Check before comparing month-over-month figures.
+        missingPreviousMonth:
+          type: boolean
+          description: True when the previous month's snapshot is missing.
+        latestSnapshot:
+          type: string
+          description: Latest snapshot ID
+        previousSnapshot:
+          type: string
+          description: Previous snapshot ID
+    MicrosoftLicenseReportAllCompanies:
+      type: object
+      description: Microsoft 365 License Report rolled up across all active companies.
+      properties:
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseType'
+        trends:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseTrend'
+        overview:
+          $ref: '#/components/schemas/LicenseOverview'
+        companies:
+          type: array
+          description: Companies with their license assignments and changes.
+          items:
+            type: object
+        missingLatestMonth:
+          type: boolean
+        missingPreviousMonth:
+          type: boolean
+    CustomerLicenses:
+      type: object
+      description: Augmentt module license consumption for one customer.
+      properties:
+        customerId:
+          type: integer
+          description: Unique tenant identifier, the same value as Customer.id.
+        licenses:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: The licensed Augmentt module.
+                enum:
+                - discover
+                - engage
+                - secure
+              count:
+                type: integer
+                description: Number of licensed users for the module.
+    LicenseRenewal:
+      type: object
+      properties:
+        planName:
+          type: string
+          description: Name of the Microsoft license
+        subscriptions:
+          type: array
+          items:
+            type: object
+            properties:
+              subscriptionId:
+                type: string
+                description: Microsoft's subscription unique identifier
+              nextLifecycleDateTime:
+                type: string
+                description: Next renewal date
+              estimatedCommitment:
+                type: string
+                description: Estimated commitment (Monthly/Yearly)
+              subscriptionTotalLicenses:
+                type: integer
+                description: License count in the subscription
+    Error:
+      type: object
+      description: The documented error envelope, returned as JSON on every non-2xx response.
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          enum:
+          - UNAUTHORIZED
+          - FORBIDDEN
+          - NOT_FOUND
+          - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable explanation.
+    LicenseOverview:
+      type: object
+      properties:
+        licenses:
+          type: array
+          description: Active license details.
+          items:
+            type: object
+            properties:
+              planName:
+                type: string
+              count:
+                type: integer
+                description: Count of enabled licenses
+              change:
+                type: integer
+                description: Licenses added or removed based on trends
+        assigned:
+          type: array
+          description: Assigned license details.
+          items:
+            type: object
+            properties:
+              planName:
+                type: string
+              count:
+                type: integer
+                description: Count of enabled licenses
+              total:
+                type: integer
+                description: Total licenses in the plan
+              change:
+                type: integer
+                description: Licenses added or removed based on trends
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      description: The company identifier, taken from the `id` field of /v1/customers.
+      schema:
+        type: integer
+  responses:
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: Missing or invalid credentials
+    Forbidden:
+      description: Keys are valid, but API access is not enabled for your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: FORBIDDEN
+            message: API access is not enabled for this organization
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
+    BadRequest:
+      description: Malformed request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    AccessKeyId:
+      type: apiKey
+      in: header
+      name: AccessKeyId
+      description: The Access Key ID issued by Augmentt support. Must be sent on every request alongside AccessKeySecret. Keys cannot be generated in the portal; request them from support@augmentt.com.
+    AccessKeySecret:
+      type: apiKey
+      in: header
+      name: AccessKeySecret
+      description: The Access Key Secret issued by Augmentt support. Treat it like a password — it cannot be retrieved from the portal after issue. Contact support for a new key pair if it is lost.
+x-generated-from: documentation
+x-authored-by: API Evangelist
+x-modeled-from: https://support.augmentt.com/kb/en/augmentt-api-548051
+x-source-read: '2026-09-14'
+x-first-party: false

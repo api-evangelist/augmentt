@@ -1,0 +1,24 @@
+{
+  "provider": "augmentt",
+  "sources": [
+    "_original/augmentt-api-openapi.yml"
+  ],
+  "outputs": [
+    "augmentt-customers-api-openapi.yml",
+    "augmentt-licensing-api-openapi.yml",
+    "augmentt-security-reports-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "augmentt-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "augmentt-customers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "augmentt-licensing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "augmentt-security-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

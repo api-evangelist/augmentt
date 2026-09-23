@@ -1,0 +1,249 @@
+openapi: 3.2.0
+info:
+  title: Augmentt Customers API
+  version: '1.0'
+  summary: Read-only reporting API for the Augmentt Microsoft 365 management platform for MSPs.
+  description: The Augmentt API lets an MSP pull the data behind Augmentt's reports — customers, Augmentt module license consumption, MFA, security posture, Microsoft 365 licensing, threat and summary reports — into their own systems.
+  contact:
+    name: Augmentt Support
+    email: support@augmentt.com
+    url: https://support.augmentt.com/kb/en/augmentt-api-548051
+  termsOfService: https://www.augmentt.com/subscription-agreement/
+servers:
+- url: https://api.augmentt.com
+  description: North America (NAM)
+- url: https://api.eu.augmentt.com
+  description: Europe (EU)
+- url: https://api.apac.augmentt.com
+  description: Asia Pacific (APAC)
+security:
+- AccessKeyId: []
+  AccessKeySecret: []
+tags:
+- name: Customers
+  description: Companies (tenants) configured under Configuration > Companies in the Augmentt portal.
+paths:
+  /v1/customers:
+    get:
+      operationId: listCustomers
+      summary: List all customers
+      description: Returns every active company configured under Configuration > Companies for the organization the API keys belong to. The `id` returned here is the `customerId` used by every other endpoint. Deactivated companies are excluded from report roll-ups; the `deactivated` property lets you confirm a company's state.
+      tags:
+      - Customers
+      responses:
+        '200':
+          description: A collection of customer objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+              examples:
+                allCustomers:
+                  summary: List all customers (verbatim from the Augmentt API reference)
+                  value:
+                  - id: 123
+                    customer_name: Company 1
+                    organization: 1234
+                    parent_id: null
+                    deactivated: null
+                    psa_email: email@company1.com
+                    applied_template: null
+                    integrations:
+                    - id: a1b2c3
+                      type: psa
+                    - id: 1a2b3c
+                      type: m365
+                  - id: 124
+                    customer_name: Company 2
+                    organization: 1234
+                    parent_id: 123
+                    deactivated: null
+                    psa_email: null
+                    applied_template: null
+                    integrations:
+                    - id: a1b2c3
+                      type: psa
+                    - id: 1a2b3c
+                      type: m365
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /v1/customers/{customerId}:
+    get:
+      operationId: getCustomer
+      summary: Get a single customer
+      description: Returns the single company identified by `customerId`, in the same shape as the list response.
+      tags:
+      - Customers
+      parameters:
+      - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: A single customer object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+              examples:
+                singleCustomer:
+                  summary: List a single customer (verbatim from the Augmentt API reference)
+                  value:
+                    id: 123
+                    customer_name: Company 1
+                    organization: 1234
+                    parent_id: null
+                    deactivated: null
+                    psa_email: email@company1.com
+                    applied_template: null
+                    integrations:
+                    - id: a1b2c3
+                      type: psa
+                    - id: 1a2b3c
+                      type: m365
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      description: The company identifier, taken from the `id` field of /v1/customers.
+      schema:
+        type: integer
+  responses:
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: Missing or invalid credentials
+    Forbidden:
+      description: Keys are valid, but API access is not enabled for your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: FORBIDDEN
+            message: API access is not enabled for this organization
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
+    BadRequest:
+      description: Malformed request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Customer:
+      type: object
+      description: A company (tenant) configured under Configuration > Companies in the Augmentt portal.
+      properties:
+        id:
+          type: integer
+          description: Unique tenant identifier; the customerId used to drill into every report.
+        customer_name:
+          type: string
+          description: Name of the tenant.
+        organization:
+          type: integer
+          description: Unique organization identifier — your main account id.
+        parent_id:
+          type:
+          - integer
+          - 'null'
+          description: The id of the main tenant this company is nested under. Null on the main account company.
+        deactivated:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the customer has been deactivated in the portal. Default null.
+        psa_email:
+          type:
+          - string
+          - 'null'
+          description: Email used for alert notifications / PSA tickets. Default null.
+        applied_template:
+          type:
+          - integer
+          - 'null'
+          description: Numeric id of the Posture Template (Secure > Security Posture > Posture Templates) applied to this customer, or null. Template names are not returned by the API. This is not a Compliance Audit assessment.
+        integrations:
+          type: array
+          description: Integrations connected for this tenant.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Identifier of the integration instance.
+              type:
+                type: string
+                description: Integration type, for example psa or m365.
+    Error:
+      type: object
+      description: The documented error envelope, returned as JSON on every non-2xx response.
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          enum:
+          - UNAUTHORIZED
+          - FORBIDDEN
+          - NOT_FOUND
+          - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable explanation.
+  securitySchemes:
+    AccessKeyId:
+      type: apiKey
+      in: header
+      name: AccessKeyId
+      description: The Access Key ID issued by Augmentt support. Must be sent on every request alongside AccessKeySecret. Keys cannot be generated in the portal; request them from support@augmentt.com.
+    AccessKeySecret:
+      type: apiKey
+      in: header
+      name: AccessKeySecret
+      description: The Access Key Secret issued by Augmentt support. Treat it like a password — it cannot be retrieved from the portal after issue. Contact support for a new key pair if it is lost.
+x-generated-from: documentation
+x-authored-by: API Evangelist
+x-modeled-from: https://support.augmentt.com/kb/en/augmentt-api-548051
+x-source-read: '2026-09-14'
+x-first-party: false
