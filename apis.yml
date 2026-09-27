@@ -43,7 +43,7 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/augmentt.png
 tags:
 - MSP
-- Microsoft-365
+- Microsoft 365
 - SaaS Management
 - SaaS Security
 - Shadow IT
@@ -63,6 +63,7 @@ tags_raw:
 - License Management
 - Multi-Tenant
 - Reporting
+- Microsoft-365
 url: https://raw.githubusercontent.com/api-evangelist/augmentt/refs/heads/main/apis.yml
 created: '2026-03-27'
 modified: '2026-09-14'
