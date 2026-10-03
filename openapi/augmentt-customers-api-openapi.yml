@@ -120,14 +120,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
-  parameters:
-    CustomerId:
-      name: customerId
-      in: path
-      required: true
-      description: The company identifier, taken from the `id` field of /v1/customers.
-      schema:
-        type: integer
   responses:
     Forbidden:
       description: Keys are valid, but API access is not enabled for your organization.
@@ -138,15 +130,6 @@ components:
           example:
             error: FORBIDDEN
             message: API access is not enabled for this organization
-    InternalError:
-      description: Server error. Retry, and contact support if it persists.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: INTERNAL_ERROR
-            message: Unexpected server error
     BadRequest:
       description: Malformed request.
       content:
@@ -170,6 +153,23 @@ components:
           example:
             error: UNAUTHORIZED
             message: Missing or invalid credentials
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      description: The company identifier, taken from the `id` field of /v1/customers.
+      schema:
+        type: integer
   schemas:
     Customer:
       type: object

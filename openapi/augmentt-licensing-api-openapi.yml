@@ -170,37 +170,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
-  parameters:
-    CustomerId:
-      name: customerId
-      in: path
-      required: true
-      description: The company identifier, taken from the `id` field of /v1/customers.
-      schema:
-        type: integer
   schemas:
-    CustomerLicenses:
-      type: object
-      description: Augmentt module license consumption for one customer.
-      properties:
-        customerId:
-          type: integer
-          description: Unique tenant identifier, the same value as Customer.id.
-        licenses:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                description: The licensed Augmentt module.
-                enum:
-                - discover
-                - engage
-                - secure
-              count:
-                type: integer
-                description: Number of licensed users for the module.
     LicenseType:
       type: object
       properties:
@@ -210,6 +180,29 @@ components:
         count:
           type: integer
           description: Count of active licenses
+    LicenseRenewal:
+      type: object
+      properties:
+        planName:
+          type: string
+          description: Name of the Microsoft license
+        subscriptions:
+          type: array
+          items:
+            type: object
+            properties:
+              subscriptionId:
+                type: string
+                description: Microsoft's subscription unique identifier
+              nextLifecycleDateTime:
+                type: string
+                description: Next renewal date
+              estimatedCommitment:
+                type: string
+                description: Estimated commitment (Monthly/Yearly)
+              subscriptionTotalLicenses:
+                type: integer
+                description: License count in the subscription
     LicenseOverview:
       type: object
       properties:
@@ -279,18 +272,28 @@ components:
         previousSnapshot:
           type: string
           description: Previous snapshot ID
-    LicenseTrend:
+    CustomerLicenses:
       type: object
+      description: Augmentt module license consumption for one customer.
       properties:
-        date:
-          type: string
-          description: Last day of the month used as a delta indicator
-        enabledCount:
+        customerId:
           type: integer
-          description: Count of enabled licenses
-        assignedCount:
-          type: integer
-          description: Count of assigned licenses
+          description: Unique tenant identifier, the same value as Customer.id.
+        licenses:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: The licensed Augmentt module.
+                enum:
+                - discover
+                - engage
+                - secure
+              count:
+                type: integer
+                description: Number of licensed users for the module.
     MicrosoftLicenseReportAllCompanies:
       type: object
       description: Microsoft 365 License Report rolled up across all active companies.
@@ -314,29 +317,6 @@ components:
           type: boolean
         missingPreviousMonth:
           type: boolean
-    LicenseRenewal:
-      type: object
-      properties:
-        planName:
-          type: string
-          description: Name of the Microsoft license
-        subscriptions:
-          type: array
-          items:
-            type: object
-            properties:
-              subscriptionId:
-                type: string
-                description: Microsoft's subscription unique identifier
-              nextLifecycleDateTime:
-                type: string
-                description: Next renewal date
-              estimatedCommitment:
-                type: string
-                description: Estimated commitment (Monthly/Yearly)
-              subscriptionTotalLicenses:
-                type: integer
-                description: License count in the subscription
     Error:
       type: object
       description: The documented error envelope, returned as JSON on every non-2xx response.
@@ -352,6 +332,18 @@ components:
         message:
           type: string
           description: Human-readable explanation.
+    LicenseTrend:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Last day of the month used as a delta indicator
+        enabledCount:
+          type: integer
+          description: Count of enabled licenses
+        assignedCount:
+          type: integer
+          description: Count of assigned licenses
   responses:
     Forbidden:
       description: Keys are valid, but API access is not enabled for your organization.
@@ -362,15 +354,6 @@ components:
           example:
             error: FORBIDDEN
             message: API access is not enabled for this organization
-    InternalError:
-      description: Server error. Retry, and contact support if it persists.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: INTERNAL_ERROR
-            message: Unexpected server error
     BadRequest:
       description: Malformed request.
       content:
@@ -394,6 +377,23 @@ components:
           example:
             error: UNAUTHORIZED
             message: Missing or invalid credentials
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      description: The company identifier, taken from the `id` field of /v1/customers.
+      schema:
+        type: integer
   securitySchemes:
     AccessKeyId:
       type: apiKey
