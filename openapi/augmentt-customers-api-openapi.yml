@@ -121,6 +121,32 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   responses:
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: Missing or invalid credentials
     Forbidden:
       description: Keys are valid, but API access is not enabled for your organization.
       content:
@@ -136,40 +162,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            message: The requested API endpoint is invalid. Please input the correct URL.
-    Unauthorized:
-      description: Missing or invalid AccessKeyId / AccessKeySecret.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: UNAUTHORIZED
-            message: Missing or invalid credentials
-    InternalError:
-      description: Server error. Retry, and contact support if it persists.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: INTERNAL_ERROR
-            message: Unexpected server error
-  parameters:
-    CustomerId:
-      name: customerId
-      in: path
-      required: true
-      description: The company identifier, taken from the `id` field of /v1/customers.
-      schema:
-        type: integer
   schemas:
     Customer:
       type: object
@@ -231,6 +223,14 @@ components:
         message:
           type: string
           description: Human-readable explanation.
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      description: The company identifier, taken from the `id` field of /v1/customers.
+      schema:
+        type: integer
   securitySchemes:
     AccessKeyId:
       type: apiKey

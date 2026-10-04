@@ -170,16 +170,61 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 components:
+  responses:
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: Missing or invalid credentials
+    Forbidden:
+      description: Keys are valid, but API access is not enabled for your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: FORBIDDEN
+            message: API access is not enabled for this organization
+    BadRequest:
+      description: Malformed request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    LicenseType:
+    LicenseTrend:
       type: object
       properties:
-        planName:
+        date:
           type: string
-          description: Name of the Microsoft license
-        count:
+          description: Last day of the month used as a delta indicator
+        enabledCount:
           type: integer
-          description: Count of active licenses
+          description: Count of enabled licenses
+        assignedCount:
+          type: integer
+          description: Count of assigned licenses
     LicenseRenewal:
       type: object
       properties:
@@ -203,6 +248,30 @@ components:
               subscriptionTotalLicenses:
                 type: integer
                 description: License count in the subscription
+    LicenseType:
+      type: object
+      properties:
+        planName:
+          type: string
+          description: Name of the Microsoft license
+        count:
+          type: integer
+          description: Count of active licenses
+    Error:
+      type: object
+      description: The documented error envelope, returned as JSON on every non-2xx response.
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          enum:
+          - UNAUTHORIZED
+          - FORBIDDEN
+          - NOT_FOUND
+          - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable explanation.
     LicenseOverview:
       type: object
       properties:
@@ -237,6 +306,29 @@ components:
               change:
                 type: integer
                 description: Licenses added or removed based on trends
+    MicrosoftLicenseReportAllCompanies:
+      type: object
+      description: Microsoft 365 License Report rolled up across all active companies.
+      properties:
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseType'
+        trends:
+          type: array
+          items:
+            $ref: '#/components/schemas/LicenseTrend'
+        overview:
+          $ref: '#/components/schemas/LicenseOverview'
+        companies:
+          type: array
+          description: Companies with their license assignments and changes.
+          items:
+            type: object
+        missingLatestMonth:
+          type: boolean
+        missingPreviousMonth:
+          type: boolean
     MicrosoftLicenseReport:
       type: object
       description: Microsoft 365 License Report for a single tenant.
@@ -294,98 +386,6 @@ components:
               count:
                 type: integer
                 description: Number of licensed users for the module.
-    MicrosoftLicenseReportAllCompanies:
-      type: object
-      description: Microsoft 365 License Report rolled up across all active companies.
-      properties:
-        types:
-          type: array
-          items:
-            $ref: '#/components/schemas/LicenseType'
-        trends:
-          type: array
-          items:
-            $ref: '#/components/schemas/LicenseTrend'
-        overview:
-          $ref: '#/components/schemas/LicenseOverview'
-        companies:
-          type: array
-          description: Companies with their license assignments and changes.
-          items:
-            type: object
-        missingLatestMonth:
-          type: boolean
-        missingPreviousMonth:
-          type: boolean
-    Error:
-      type: object
-      description: The documented error envelope, returned as JSON on every non-2xx response.
-      properties:
-        error:
-          type: string
-          description: Machine-readable error code.
-          enum:
-          - UNAUTHORIZED
-          - FORBIDDEN
-          - NOT_FOUND
-          - INTERNAL_ERROR
-        message:
-          type: string
-          description: Human-readable explanation.
-    LicenseTrend:
-      type: object
-      properties:
-        date:
-          type: string
-          description: Last day of the month used as a delta indicator
-        enabledCount:
-          type: integer
-          description: Count of enabled licenses
-        assignedCount:
-          type: integer
-          description: Count of assigned licenses
-  responses:
-    Forbidden:
-      description: Keys are valid, but API access is not enabled for your organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: FORBIDDEN
-            message: API access is not enabled for this organization
-    BadRequest:
-      description: Malformed request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            message: The requested API endpoint is invalid. Please input the correct URL.
-    Unauthorized:
-      description: Missing or invalid AccessKeyId / AccessKeySecret.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: UNAUTHORIZED
-            message: Missing or invalid credentials
-    InternalError:
-      description: Server error. Retry, and contact support if it persists.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: INTERNAL_ERROR
-            message: Unexpected server error
   parameters:
     CustomerId:
       name: customerId

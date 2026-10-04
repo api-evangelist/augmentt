@@ -225,6 +225,379 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   schemas:
+    SummaryReport:
+      type: object
+      description: Secure > Summary Report for a single tenant. Fixed 90-day reporting window.
+      properties:
+        totalPreventedIncidents:
+          type: integer
+          description: Count of prevented incidents in the tenant
+        incidentTrends:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: integer
+                description: Timestamp of the snapshot
+              value:
+                type: integer
+                description: Incident count in the snapshot
+        integrationComplianceScore:
+          type: object
+          description: Microsoft Identity Score achieved.
+          properties:
+            value:
+              type: number
+        integrationSecurityScore:
+          $ref: '#/components/schemas/IntegrationScore'
+        mfaStatus:
+          type: object
+          description: MFA protection summary for the tenant.
+          properties:
+            protected:
+              type: integer
+            notProtected:
+              type: integer
+            trends:
+              type: array
+              description: MFA protection trends over time, charted in the UI.
+              items:
+                type: object
+                properties:
+                  timestamp:
+                    type: integer
+                  protected:
+                    type: number
+                    description: Percentage of protected users
+                  notProtected:
+                    type: number
+                    description: Percentage of users not protected
+                  counts:
+                    type: object
+                    properties:
+                      protected:
+                        type: integer
+                      notProtected:
+                        type: integer
+                      signInBlocked:
+                        type: integer
+        preventedRiskySignIns:
+          type: object
+          properties:
+            total:
+              type: integer
+            topAccounts:
+              type: array
+              items:
+                type: object
+                properties:
+                  user:
+                    type: string
+                  count:
+                    type: integer
+                  userId:
+                    type: string
+        preventedRiskyAccounts:
+          type: object
+          properties:
+            total:
+              type: integer
+            topAccounts:
+              type: array
+              items:
+                type: object
+                properties:
+                  user:
+                    type: string
+                  count:
+                    type: integer
+                  userId:
+                    type: string
+        preventedRiskyCountries:
+          type: object
+          properties:
+            total:
+              type: integer
+            topCountries:
+              type: array
+              items:
+                type: object
+                properties:
+                  country:
+                    type: string
+                  count:
+                    type: integer
+        preventedIpAddresses:
+          type: object
+          properties:
+            total:
+              type: integer
+            topIps:
+              type: array
+              items:
+                type: object
+                properties:
+                  ip:
+                    type: string
+                  country:
+                    type: string
+                  count:
+                    type: integer
+        preventedDataLossEvents:
+          type: object
+          description: Summary of data loss incidents.
+        preventedLegacyAuthAttempts:
+          type: object
+          description: Summary of legacy authentication incidents.
+        preventedIncidents:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Count of prevented incidents
+            remediated:
+              type: integer
+              description: Count of remediated incidents
+            recognized:
+              type: integer
+              description: Count of identified incidents
+            incidents:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+                    description: Risk event type
+                  userImpacted:
+                    type: string
+                    description: Targeted user in the event
+                  action:
+                    type: string
+                    description: Remediation action taken
+                  category:
+                    type: string
+                    description: Event category
+                  location:
+                    type: string
+                    description: Country of origin (2 character identifier)
+                  date:
+                    type: string
+                    description: Date of the event (yyyy-mm-dd)
+                  userId:
+                    type: string
+    AtRiskAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User's unique ID
+        displayName:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        username:
+          type: string
+          description: User's email address (service principal)
+        licenseType:
+          type: array
+          items:
+            type: string
+        role:
+          type: array
+          items:
+            type: string
+        group:
+          type: array
+          items:
+            type: string
+        mfaStatus:
+          type: string
+          description: Status of MFA protection
+        mfaRegistration:
+          type: string
+          description: Status of MFA registration
+        lastActive:
+          type: string
+          description: Days since last login
+        isInactive:
+          type: boolean
+        userId:
+          type: string
+          description: Microsoft's user ID
+        lastAppActivity:
+          type:
+          - string
+          - 'null'
+          description: Last application with recorded user activity
+    Error:
+      type: object
+      description: The documented error envelope, returned as JSON on every non-2xx response.
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          enum:
+          - UNAUTHORIZED
+          - FORBIDDEN
+          - NOT_FOUND
+          - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable explanation.
+    MfaReport:
+      type: object
+      description: Secure > MFA Report for a single tenant.
+      properties:
+        id:
+          type: string
+          description: Unique tenant identifier
+          also referred to as customerId: null
+        name:
+          type: string
+          description: Name of the tenant
+        authenticationMethods:
+          $ref: '#/components/schemas/AuthenticationMethods'
+        mfaConfiguration:
+          $ref: '#/components/schemas/MfaConfiguration'
+        mfaStatus:
+          $ref: '#/components/schemas/MfaStatusSummary'
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/MfaEmployee'
+        applied_template:
+          type:
+          - integer
+          - 'null'
+          description: Numeric id of the Posture Template applied to this customer, or null.
+    MfaStatusSummary:
+      type: object
+      description: Count of employees by MFA protection state.
+      properties:
+        protected:
+          type: integer
+          description: MFA is registered and enforced
+        notProtected:
+          type: integer
+          description: MFA is not required or not registered
+        signInBlocked:
+          type: integer
+          description: The account cannot be accessed and, while not compliant with MFA, is therefore safe.
+    MfaEmployee:
+      type: object
+      description: One employee row in the MFA report.
+      properties:
+        email:
+          type: string
+          description: User's email address
+        displayName:
+          type: string
+          description: User's display name
+        firstName:
+          type: string
+          description: User's first name
+        lastName:
+          type: string
+          description: User's last name
+        companyId:
+          type: string
+          description: Unique tenant identifier
+          also referred to as customerId: null
+        licenseType:
+          type: array
+          description: Microsoft 365 licenses assigned to the user.
+          items:
+            type: string
+        role:
+          type: array
+          description: Roles assigned to the user.
+          items:
+            type: string
+        mfaStatus:
+          type: object
+          description: The user's MFA protection detail.
+          properties:
+            status:
+              type: string
+              description: Status of MFA protection
+            statusList:
+              type: array
+              description: MFA protections in use by the user.
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of MFA protection
+                  status:
+                    type: string
+                    description: Status of that protection
+        mfaRegistration:
+          type: string
+          description: Status of MFA registration
+        authenticationType:
+          type: array
+          description: Authentication methods in use by the user.
+          items:
+            type: string
+        userId:
+          type: string
+          description: Microsoft's user ID
+        isUserSigninEnabled:
+          type: boolean
+          description: Whether sign-in is enabled for the user
+        mfaConfigurations:
+          type: object
+          description: The user's MFA configuration detail.
+          properties:
+            configurationStatus:
+              type: string
+              description: Status of the MFA enforcement methods applied to the user.
+            affectedByCAs:
+              type: array
+              description: Conditional Access Policies affecting the user.
+              items:
+                type: object
+                properties:
+                  policyId:
+                    type: string
+                    description: ID of the Conditional Access Policy
+                  policyName:
+                    type: string
+                    description: Name of the Conditional Access Policy
+    PostureConfigurationStatus:
+      type: object
+      properties:
+        configured:
+          type: integer
+          description: Postures with Configured status
+        partiallyConfigured:
+          type: integer
+          description: Postures with Partially Configured status
+        notConfigured:
+          type: integer
+          description: Postures with Not Configured status
+        notMeasured:
+          type: integer
+          description: Postures with Not Measured status
+        resolved:
+          type: integer
+          description: Postures with Resolved status
+    PostureRecommendations:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Count of active posture recommendations
+        total:
+          type: integer
+          description: Total count of posture recommendations
     IntegrationScore:
       type: object
       properties:
@@ -266,6 +639,64 @@ components:
           description: Per-tenant security posture detail.
           items:
             $ref: '#/components/schemas/PostureReport'
+    PostureReport:
+      type: object
+      description: Secure > Security Posture report for a single tenant.
+      properties:
+        postureRecommendations:
+          $ref: '#/components/schemas/PostureRecommendations'
+        configurationStatus:
+          $ref: '#/components/schemas/PostureConfigurationStatus'
+        securityChecks:
+          type: object
+          description: Security checks grouped by state.
+          properties:
+            allMonitored:
+              type: array
+              description: Monitored security postures in the tenant.
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+            configured:
+              type: array
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+            partiallyConfigured:
+              type: array
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+            notConfigured:
+              type: array
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+            notMeasured:
+              type: array
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+            ignored:
+              type: array
+              description: Checks disabled for this tenant. Still returned here, but excluded from allMonitored and from the configurationStatus counts.
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+            resolved:
+              type: array
+              items:
+                $ref: '#/components/schemas/SecurityCheck'
+    AuthenticationMethods:
+      type: object
+      description: Count of employees by authentication method in use.
+      properties:
+        authenticationApp:
+          type: integer
+          description: Authenticator App
+        phoneSms:
+          type: integer
+          description: Phone call or SMS
+        securityKey:
+          type: integer
+          description: Such as a FIDO2 security key
+        other:
+          type: integer
+          description: Other authentication methods
     ThreatReport:
       type: object
       description: Secure > Threat Report for a single tenant. Fixed 90-day reporting window.
@@ -461,450 +892,6 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/AtRiskAccount'
-    AtRiskAccount:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: User's unique ID
-        displayName:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        username:
-          type: string
-          description: User's email address (service principal)
-        licenseType:
-          type: array
-          items:
-            type: string
-        role:
-          type: array
-          items:
-            type: string
-        group:
-          type: array
-          items:
-            type: string
-        mfaStatus:
-          type: string
-          description: Status of MFA protection
-        mfaRegistration:
-          type: string
-          description: Status of MFA registration
-        lastActive:
-          type: string
-          description: Days since last login
-        isInactive:
-          type: boolean
-        userId:
-          type: string
-          description: Microsoft's user ID
-        lastAppActivity:
-          type:
-          - string
-          - 'null'
-          description: Last application with recorded user activity
-    Error:
-      type: object
-      description: The documented error envelope, returned as JSON on every non-2xx response.
-      properties:
-        error:
-          type: string
-          description: Machine-readable error code.
-          enum:
-          - UNAUTHORIZED
-          - FORBIDDEN
-          - NOT_FOUND
-          - INTERNAL_ERROR
-        message:
-          type: string
-          description: Human-readable explanation.
-    MfaEmployee:
-      type: object
-      description: One employee row in the MFA report.
-      properties:
-        email:
-          type: string
-          description: User's email address
-        displayName:
-          type: string
-          description: User's display name
-        firstName:
-          type: string
-          description: User's first name
-        lastName:
-          type: string
-          description: User's last name
-        companyId:
-          type: string
-          description: Unique tenant identifier
-          also referred to as customerId: null
-        licenseType:
-          type: array
-          description: Microsoft 365 licenses assigned to the user.
-          items:
-            type: string
-        role:
-          type: array
-          description: Roles assigned to the user.
-          items:
-            type: string
-        mfaStatus:
-          type: object
-          description: The user's MFA protection detail.
-          properties:
-            status:
-              type: string
-              description: Status of MFA protection
-            statusList:
-              type: array
-              description: MFA protections in use by the user.
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: Type of MFA protection
-                  status:
-                    type: string
-                    description: Status of that protection
-        mfaRegistration:
-          type: string
-          description: Status of MFA registration
-        authenticationType:
-          type: array
-          description: Authentication methods in use by the user.
-          items:
-            type: string
-        userId:
-          type: string
-          description: Microsoft's user ID
-        isUserSigninEnabled:
-          type: boolean
-          description: Whether sign-in is enabled for the user
-        mfaConfigurations:
-          type: object
-          description: The user's MFA configuration detail.
-          properties:
-            configurationStatus:
-              type: string
-              description: Status of the MFA enforcement methods applied to the user.
-            affectedByCAs:
-              type: array
-              description: Conditional Access Policies affecting the user.
-              items:
-                type: object
-                properties:
-                  policyId:
-                    type: string
-                    description: ID of the Conditional Access Policy
-                  policyName:
-                    type: string
-                    description: Name of the Conditional Access Policy
-    PostureReport:
-      type: object
-      description: Secure > Security Posture report for a single tenant.
-      properties:
-        postureRecommendations:
-          $ref: '#/components/schemas/PostureRecommendations'
-        configurationStatus:
-          $ref: '#/components/schemas/PostureConfigurationStatus'
-        securityChecks:
-          type: object
-          description: Security checks grouped by state.
-          properties:
-            allMonitored:
-              type: array
-              description: Monitored security postures in the tenant.
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-            configured:
-              type: array
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-            partiallyConfigured:
-              type: array
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-            notConfigured:
-              type: array
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-            notMeasured:
-              type: array
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-            ignored:
-              type: array
-              description: Checks disabled for this tenant. Still returned here, but excluded from allMonitored and from the configurationStatus counts.
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-            resolved:
-              type: array
-              items:
-                $ref: '#/components/schemas/SecurityCheck'
-    MfaReport:
-      type: object
-      description: Secure > MFA Report for a single tenant.
-      properties:
-        id:
-          type: string
-          description: Unique tenant identifier
-          also referred to as customerId: null
-        name:
-          type: string
-          description: Name of the tenant
-        authenticationMethods:
-          $ref: '#/components/schemas/AuthenticationMethods'
-        mfaConfiguration:
-          $ref: '#/components/schemas/MfaConfiguration'
-        mfaStatus:
-          $ref: '#/components/schemas/MfaStatusSummary'
-        employees:
-          type: array
-          items:
-            $ref: '#/components/schemas/MfaEmployee'
-        applied_template:
-          type:
-          - integer
-          - 'null'
-          description: Numeric id of the Posture Template applied to this customer, or null.
-    PostureRecommendations:
-      type: object
-      properties:
-        count:
-          type: integer
-          description: Count of active posture recommendations
-        total:
-          type: integer
-          description: Total count of posture recommendations
-    SummaryReport:
-      type: object
-      description: Secure > Summary Report for a single tenant. Fixed 90-day reporting window.
-      properties:
-        totalPreventedIncidents:
-          type: integer
-          description: Count of prevented incidents in the tenant
-        incidentTrends:
-          type: array
-          items:
-            type: object
-            properties:
-              key:
-                type: integer
-                description: Timestamp of the snapshot
-              value:
-                type: integer
-                description: Incident count in the snapshot
-        integrationComplianceScore:
-          type: object
-          description: Microsoft Identity Score achieved.
-          properties:
-            value:
-              type: number
-        integrationSecurityScore:
-          $ref: '#/components/schemas/IntegrationScore'
-        mfaStatus:
-          type: object
-          description: MFA protection summary for the tenant.
-          properties:
-            protected:
-              type: integer
-            notProtected:
-              type: integer
-            trends:
-              type: array
-              description: MFA protection trends over time, charted in the UI.
-              items:
-                type: object
-                properties:
-                  timestamp:
-                    type: integer
-                  protected:
-                    type: number
-                    description: Percentage of protected users
-                  notProtected:
-                    type: number
-                    description: Percentage of users not protected
-                  counts:
-                    type: object
-                    properties:
-                      protected:
-                        type: integer
-                      notProtected:
-                        type: integer
-                      signInBlocked:
-                        type: integer
-        preventedRiskySignIns:
-          type: object
-          properties:
-            total:
-              type: integer
-            topAccounts:
-              type: array
-              items:
-                type: object
-                properties:
-                  user:
-                    type: string
-                  count:
-                    type: integer
-                  userId:
-                    type: string
-        preventedRiskyAccounts:
-          type: object
-          properties:
-            total:
-              type: integer
-            topAccounts:
-              type: array
-              items:
-                type: object
-                properties:
-                  user:
-                    type: string
-                  count:
-                    type: integer
-                  userId:
-                    type: string
-        preventedRiskyCountries:
-          type: object
-          properties:
-            total:
-              type: integer
-            topCountries:
-              type: array
-              items:
-                type: object
-                properties:
-                  country:
-                    type: string
-                  count:
-                    type: integer
-        preventedIpAddresses:
-          type: object
-          properties:
-            total:
-              type: integer
-            topIps:
-              type: array
-              items:
-                type: object
-                properties:
-                  ip:
-                    type: string
-                  country:
-                    type: string
-                  count:
-                    type: integer
-        preventedDataLossEvents:
-          type: object
-          description: Summary of data loss incidents.
-        preventedLegacyAuthAttempts:
-          type: object
-          description: Summary of legacy authentication incidents.
-        preventedIncidents:
-          type: object
-          properties:
-            total:
-              type: integer
-              description: Count of prevented incidents
-            remediated:
-              type: integer
-              description: Count of remediated incidents
-            recognized:
-              type: integer
-              description: Count of identified incidents
-            incidents:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  type:
-                    type: string
-                    description: Risk event type
-                  userImpacted:
-                    type: string
-                    description: Targeted user in the event
-                  action:
-                    type: string
-                    description: Remediation action taken
-                  category:
-                    type: string
-                    description: Event category
-                  location:
-                    type: string
-                    description: Country of origin (2 character identifier)
-                  date:
-                    type: string
-                    description: Date of the event (yyyy-mm-dd)
-                  userId:
-                    type: string
-    MfaStatusSummary:
-      type: object
-      description: Count of employees by MFA protection state.
-      properties:
-        protected:
-          type: integer
-          description: MFA is registered and enforced
-        notProtected:
-          type: integer
-          description: MFA is not required or not registered
-        signInBlocked:
-          type: integer
-          description: The account cannot be accessed and, while not compliant with MFA, is therefore safe.
-    AuthenticationMethods:
-      type: object
-      description: Count of employees by authentication method in use.
-      properties:
-        authenticationApp:
-          type: integer
-          description: Authenticator App
-        phoneSms:
-          type: integer
-          description: Phone call or SMS
-        securityKey:
-          type: integer
-          description: Such as a FIDO2 security key
-        other:
-          type: integer
-          description: Other authentication methods
-    SecurityCheck:
-      type: object
-      description: One security check in the posture report. The reference documents each check as carrying its name, check id, source, category, status, license requirement, Microsoft Secure Score impact, configuration issues and compliance details.
-      properties:
-        securityCheck:
-          type: string
-          description: The name of the security check
-        checkId:
-          type: string
-          description: Unique identifier of the security check
-        source:
-          type: string
-          description: The source of the security check — `internal` for a check built and maintained by Augmentt, or an external check provider such as maester.
-    PostureConfigurationStatus:
-      type: object
-      properties:
-        configured:
-          type: integer
-          description: Postures with Configured status
-        partiallyConfigured:
-          type: integer
-          description: Postures with Partially Configured status
-        notConfigured:
-          type: integer
-          description: Postures with Not Configured status
-        notMeasured:
-          type: integer
-          description: Postures with Not Measured status
-        resolved:
-          type: integer
-          description: Postures with Resolved status
     MfaReportAllCompanies:
       type: object
       description: Secure > MFA Report rolled up across all active companies.
@@ -920,39 +907,20 @@ components:
           description: Per-company MFA detail.
           items:
             $ref: '#/components/schemas/MfaReport'
+    SecurityCheck:
+      type: object
+      description: One security check in the posture report. The reference documents each check as carrying its name, check id, source, category, status, license requirement, Microsoft Secure Score impact, configuration issues and compliance details.
+      properties:
+        securityCheck:
+          type: string
+          description: The name of the security check
+        checkId:
+          type: string
+          description: Unique identifier of the security check
+        source:
+          type: string
+          description: The source of the security check — `internal` for a check built and maintained by Augmentt, or an external check provider such as maester.
   responses:
-    BadRequest:
-      description: Malformed request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Keys are valid, but API access is not enabled for your organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: FORBIDDEN
-            message: API access is not enabled for this organization
-    NotFound:
-      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            message: The requested API endpoint is invalid. Please input the correct URL.
-    Unauthorized:
-      description: Missing or invalid AccessKeyId / AccessKeySecret.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: UNAUTHORIZED
-            message: Missing or invalid credentials
     InternalError:
       description: Server error. Retry, and contact support if it persists.
       content:
@@ -962,6 +930,38 @@ components:
           example:
             error: INTERNAL_ERROR
             message: Unexpected server error
+    Forbidden:
+      description: Keys are valid, but API access is not enabled for your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: FORBIDDEN
+            message: API access is not enabled for this organization
+    BadRequest:
+      description: Malformed request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: Missing or invalid credentials
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
   parameters:
     CustomerId:
       name: customerId
