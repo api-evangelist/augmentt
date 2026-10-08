@@ -216,6 +216,8 @@ apis:
   - type: RateLimits
     url: rate-limits/augmentt-rate-limits.yml
 common:
+- type: FinOps
+  url: finops/augmentt-finops.yml
 - type: VulnerabilityDisclosure
   url: security/augmentt-vulnerability-disclosure.yml
 - type: DomainSecurity
