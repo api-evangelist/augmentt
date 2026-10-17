@@ -121,32 +121,6 @@ paths:
           $ref: '#/components/responses/InternalError'
 components:
   responses:
-    NotFound:
-      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            message: The requested API endpoint is invalid. Please input the correct URL.
-    InternalError:
-      description: Server error. Retry, and contact support if it persists.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: INTERNAL_ERROR
-            message: Unexpected server error
-    Unauthorized:
-      description: Missing or invalid AccessKeyId / AccessKeySecret.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error: UNAUTHORIZED
-            message: Missing or invalid credentials
     Forbidden:
       description: Keys are valid, but API access is not enabled for your organization.
       content:
@@ -156,6 +130,32 @@ components:
           example:
             error: FORBIDDEN
             message: API access is not enabled for this organization
+    Unauthorized:
+      description: Missing or invalid AccessKeyId / AccessKeySecret.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: Missing or invalid credentials
+    InternalError:
+      description: Server error. Retry, and contact support if it persists.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: INTERNAL_ERROR
+            message: Unexpected server error
+    NotFound:
+      description: Unrecognized endpoint path, or the customerId does not exist in your organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            message: The requested API endpoint is invalid. Please input the correct URL.
     BadRequest:
       description: Malformed request.
       content:
@@ -163,6 +163,21 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      description: The documented error envelope, returned as JSON on every non-2xx response.
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          enum:
+          - UNAUTHORIZED
+          - FORBIDDEN
+          - NOT_FOUND
+          - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable explanation.
     Customer:
       type: object
       description: A company (tenant) configured under Configuration > Companies in the Augmentt portal.
@@ -208,21 +223,6 @@ components:
               type:
                 type: string
                 description: Integration type, for example psa or m365.
-    Error:
-      type: object
-      description: The documented error envelope, returned as JSON on every non-2xx response.
-      properties:
-        error:
-          type: string
-          description: Machine-readable error code.
-          enum:
-          - UNAUTHORIZED
-          - FORBIDDEN
-          - NOT_FOUND
-          - INTERNAL_ERROR
-        message:
-          type: string
-          description: Human-readable explanation.
   parameters:
     CustomerId:
       name: customerId
