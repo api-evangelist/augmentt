@@ -1,4 +1,4 @@
-# Augmentt (augmentt)
+# Augmentt
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,111 +64,137 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Augmentt is a multi-tenant SaaS management platform built for managed service providers (MSPs). It provides SaaS discovery (Shadow IT), license optimization, usage tracking, spend management, and SaaS security policy enforcement across Microsoft 365 and cloud applications. Augmentt integrates with major PSA and RMM platforms including ConnectWise and N-able.
+Augmentt is a Canadian software company (Kanata, Ontario) whose platform gives managed service providers one place to run Microsoft 365 across every client tenant. It combines SaaS and Shadow IT discovery, Microsoft 365 license and spend optimization, user lifecycle automation, Intune device baselines, and a framework-mapped security posture engine that measures each tenant against CIS Microsoft 365 Foundations, CISA SCuBA, NIST CSF 2.0, Essential Eight, CMMC and HIPAA. It integrates with the PSA and RMM tools MSPs already run, including ConnectWise and N-able, and is distributed through the Pax8 marketplace. Augmentt publishes a read-only reporting API - twelve GET endpoints across three regional hosts - that lets partners pull customer, license, MFA, posture, threat and summary report data into their own BI, PSA or billing systems.
 
-**URL:** [https://www.augmentt.com](https://www.augmentt.com)
+**Areas:** MSP · Microsoft 365 · SaaS Management · SaaS Security · Shadow IT · Security Posture · Compliance · License Management · Multi-Tenant · Reporting
 
-**Run:** [Capabilities Using Naftiko](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=company-api-evangelist&utm_content=repo)
+## Augmentt on APIs.io
 
-## Tags:
+Everything profiled for Augmentt is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/augmentt/](https://apis.io/providers/augmentt/)** — or go straight to one of the APIs or properties below.
 
- - MSP, Microsoft 365, SaaS Management, SaaS Security, Shadow IT
+### APIs (6)
 
-## Timestamps
+- [Augmentt Discover](https://apis.io/apis/augmentt/augmentt-discover/) — Augmentt Discover provides SaaS discovery and Shadow IT detection capabilities for MSPs, identifying all cloud applications used across managed client…
+- [Augmentt Optimize](https://apis.io/apis/augmentt/augmentt-optimize/) — Augmentt Optimize tracks SaaS usage and spend across client environments to identify unused licenses, redundant applications, and cost savings opportunities…
+- [Augmentt Engage](https://apis.io/apis/augmentt/augmentt-engage/) — Augmentt Engage provides SaaS administration, management, and automation capabilities allowing MSPs to centralize SaaS security policy enforcement and user…
+- [Augmentt Customers API](https://apis.io/apis/augmentt/augmentt-customers-api/) — Companies (tenants) configured under Configuration > Companies in the Augmentt portal.
+- [Augmentt Licensing API](https://apis.io/apis/augmentt/augmentt-licensing-api/) — Augmentt module license consumption and Microsoft 365 licensing reports.
+- [Augmentt Security Reports API](https://apis.io/apis/augmentt/augmentt-security-reports-api/) — MFA, security posture, threat and summary reporting for managed tenants.
 
-- **Created:** 2026-03-27
-- **Modified:** 2026-04-19
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### Augmentt Discover
-Augmentt Discover provides SaaS discovery and Shadow IT detection capabilities for MSPs, identifying all cloud applications used across managed client environments.
+#### MCP servers (1)
 
-**Human URL:** [https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/](https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/)
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags:
+- [augmentt-mcp.yml](https://apis.io/servers/augmentt/augmentt-mcp-yml/)
 
- - Discovery, MSP, SaaS, Shadow IT
+#### Overlays (1)
 
-#### Properties
+OpenAPI overlays, including conversational phrasing for each operation.
 
-- [Documentation](https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/)
+- [Augmentt Api Overlay](https://apis.io/overlays/augmentt/augmentt-api-overlay/)
 
-### Augmentt Optimize
-Augmentt Optimize tracks SaaS usage and spend across client environments to identify unused licenses, redundant applications, and cost savings opportunities for MSPs.
+#### Security (4)
 
-**Human URL:** [https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/](https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/)
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Tags:
+- [Augmentt Authentication](https://apis.io/security/augmentt/augmentt-authentication/)
+- [Augmentt Domain Security](https://apis.io/security/augmentt/augmentt-domain-security/)
+- [Augmentt Trust Center](https://apis.io/security/augmentt/augmentt-trust-center/)
+- [Augmentt Vulnerability Disclosure](https://apis.io/security/augmentt/augmentt-vulnerability-disclosure/)
 
- - License Management, MSP, SaaS, Spend Management
+#### Plans and pricing (1)
 
-#### Properties
+Published plans, tiers and prices.
 
-- [Documentation](https://www.augmentt.com/the-tools-you-need-to-offer-saas-admin-services/)
+- [Augmentt Plans Pricing](https://apis.io/plans/augmentt/augmentt-plans-pricing/)
 
-### Augmentt Engage
-Augmentt Engage provides SaaS administration, management, and automation capabilities allowing MSPs to centralize SaaS security policy enforcement and user lifecycle management across Microsoft 365 and cloud apps.
+#### Rate limits (1)
 
-**Human URL:** [https://www.augmentt.com/user-management/](https://www.augmentt.com/user-management/)
+Published request limits.
 
-#### Tags:
+- [Augmentt Rate Limits](https://apis.io/rate-limits/augmentt/augmentt-rate-limits/)
 
- - Automation, MSP, SaaS Security, User Management
+#### FinOps (1)
 
-#### Properties
+What the API costs to run, by operation.
 
-- [Documentation](https://www.augmentt.com/user-management/)
+- [Augmentt Finops](https://apis.io/finops/augmentt/augmentt-finops/)
 
-## Common Properties
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.augmentt.com)
-- [Documentation](https://www.augmentt.com/resources)
-- [PrivacyPolicy](https://www.augmentt.com/privacy-policy/)
-- [TermsOfService](https://www.augmentt.com/terms-of-service/)
-- [Contact](https://www.augmentt.com/contact/)
-- [Blog](https://www.augmentt.com/blog/)
-- [SignUp](https://www.augmentt.com/free-trial/)
+- [Documentation](https://support.augmentt.com/kb/en)
+- [Getting started](https://support.augmentt.com/kb/en/getting-started-548027)
+- [API reference](https://support.augmentt.com/kb/en/augmentt-api-548051)
 - [Pricing](https://www.augmentt.com/pricing/)
+- [Sign up](https://www.augmentt.com/free-sign-up/)
+- [Support](https://support.augmentt.com/kb/en/submit-a-support-ticket-377576)
+- [Changelog](https://www.augmentt.com/blog/category/product/)
+- [Blog](https://www.augmentt.com/blog/)
+- [Security](https://www.augmentt.com/responsible-disclosure-policy/)
+- [Trust centre](https://trust.augmentt.com/)
+- [Terms of service](https://www.augmentt.com/subscription-agreement/)
+- [Privacy policy](https://www.augmentt.com/privacy-policy/)
+- [GitHub](https://github.com/Augmentt)
+- [Status](https://status.augmentt.com/)
 
-## Features
+## API Evangelist rating
 
-| Name | Description |
-|------|-------------|
-| Multi-Tenant Management | Manage SaaS applications across multiple client tenants from a single MSP dashboard with hierarchical access control. |
-| SaaS Discovery | Automatically discover all cloud applications in use across client environments including Shadow IT not approved by IT. |
-| License Optimization | Track license utilization, identify unused seats, and generate recommendations to reduce SaaS spend across clients. |
-| SaaS Security Policies | Enforce security policies across SaaS applications including MFA requirements, conditional access, and app permissions. |
-| User Lifecycle Management | Automate user onboarding and offboarding across SaaS applications when employees join or leave client organizations. |
-| PSA Integration | Integrate discovery and optimization data with PSA platforms for automated billing and service delivery. |
+**Kin Score 44.2** — developing · rubric 0.25.0 · scored 2026-10-23
 
-## Use Cases
+| Facet | Score |
+|---|---|
+| Discoverability | 74.1 |
+| Contract quality | 15.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 50.0 |
+| Developer ergonomics | 25.6 |
+| Access clarity | 92.1 |
 
-| Name | Description |
-|------|-------------|
-| SaaS Spend Management | Identify and eliminate wasted SaaS spend by discovering unused licenses and redundant applications across client portfolios. |
-| Shadow IT Control | Detect and manage unsanctioned cloud applications to reduce security risk and enforce acceptable use policies. |
-| Microsoft 365 Management | Manage M365 licenses, security settings, and user access across all client tenants from a unified MSP console. |
-| Employee Offboarding | Automate secure offboarding of departing employees by revoking access to all SaaS applications simultaneously. |
+**Agent readiness 31.4** — agent-ready
 
-## Integrations
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
 
-| Name | Description |
-|------|-------------|
-| ConnectWise | Native integration with ConnectWise PSA for automated ticketing and billing based on SaaS discovery and license data. |
-| N-able | Integration with N-able RMM for combined endpoint and SaaS management visibility for MSPs. |
-| Microsoft 365 | Deep integration with Microsoft 365 tenant data for SaaS license, usage, and security policy management. |
-| CloudRadial | Augmentt data surfaced in CloudRadial customer portal for self-service SaaS app visibility. |
+**Regulatory alignment 35.3** — Horizontal (data, software, accessibility, platform)
 
-## Solutions
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/augmentt/](https://apis.io/providers/augmentt/).
 
-| Name | Description |
-|------|-------------|
-| MSP SaaS Management Service | Package and deliver SaaS management as a managed service offering including discovery, optimization, and security monitoring. |
-| Microsoft 365 Security | Extend M365 security posture management with SaaS-specific controls, policy enforcement, and compliance reporting. |
+## How this profile is made
 
-## Maintainers
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
 
-**FN:** Kin Lane
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Augmentt: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
 
-**Email:** kin@apievangelist.com
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/augmentt/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
