@@ -1,0 +1,107 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.augmentt.com/pricing/
+sources:
+- https://www.augmentt.com/pricing/
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T161713
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: per-seat
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+published: true
+note: Page is quote-driven for MSPs; only numeric figure is the disclaimer's "$250 per month" stated as
+  the lowest entry price at minimum seat volume, explicitly an estimate, not an offer. Modules priced
+  per seat; final pricing negotiated in a written quote.
+plan_count: 6
+currency: USD
+plans:
+- name: Augmentt subscription (lowest entry price)
+  price_text: $250 per month
+  price: 250
+  currency: USD
+  period: month
+  unit: subscription at minimum seat volume
+  included_quota: Baselines and templates mapping to CIS, HIPAA, CMMC, Essential 8; reports; phone and
+    chat support
+- name: Augmentt Autopilot Bundle (Secure Autopilot + Engage Autopilot)
+  price_text: Get a quote
+  period: none
+  unit: PER SEAT · COUNTS AS TWO MODULES
+- name: Secure Autopilot
+  price_text: PER SEAT · IN BUNDLE
+  period: none
+  unit: per seat
+- name: Engage Autopilot
+  price_text: PER SEAT · IN BUNDLE
+  period: none
+  unit: per seat
+- name: Intune Autopilot
+  price_text: Per Seat · Sold Separately
+  period: none
+  unit: per seat
+- name: Discover
+  price_text: PER SEAT · SOLD SEPARATELY
+  period: none
+  unit: per seat
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - seat
+  units:
+  - seat
+  plans:
+  - name: Augmentt subscription (lowest entry price)
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Augmentt Autopilot Bundle (Secure Autopilot + Engage Autopilot)
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - none
+  - name: Secure Autopilot
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - none
+  - name: Engage Autopilot
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - none
+  - name: Intune Autopilot
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - none
+  - name: Discover
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - none
